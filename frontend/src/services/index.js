@@ -55,3 +55,14 @@ export const noticeAPI = {
 export const analyticsAPI = {
   getDashboard: () => apiClient.get('/analytics/dashboard')
 }
+
+// Admission endpoints
+export const admissionAPI = {
+  submitRequest: (data) => apiClient.post('/admissions/submit', data),
+  getMyStatus: () => apiClient.get('/admissions/my-status'),
+  getPending: () => apiClient.get('/admissions/pending'),
+  approve: (admissionId, roomId) => apiClient.post('/admissions/approve', { admissionId, roomId }),
+  reject: (admissionId, reason) => apiClient.post('/admissions/reject', { admissionId, reason }),
+  getAll: (status) => apiClient.get('/admissions/all', { params: { status } }),
+  getStats: () => apiClient.get('/admissions/stats')
+}

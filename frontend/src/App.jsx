@@ -12,6 +12,8 @@ import RoomManagement from './pages/RoomManagement'
 import FeeManagement from './pages/FeeManagement'
 import ComplaintManagement from './pages/ComplaintManagement'
 import NoticeBoard from './pages/NoticeBoard'
+import AdmissionPage from './pages/AdmissionPage'
+import AdmissionManagement from './pages/AdmissionManagement'
 import NotFound from './pages/NotFound'
 
 // Protected Route Component
@@ -87,6 +89,14 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/admissions"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdmissionManagement />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Student Routes */}
       <Route
@@ -94,6 +104,14 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <StudentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admission"
+        element={
+          <ProtectedRoute>
+            <AdmissionPage />
           </ProtectedRoute>
         }
       />

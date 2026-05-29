@@ -11,6 +11,7 @@ import feeRoutes from './routes/feeRoutes.js'
 import complaintRoutes from './routes/complaintRoutes.js'
 import noticeRoutes from './routes/noticeRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
+import admissionRoutes from './routes/admissionRoutes.js'
 
 // Load environment variables
 dotenv.config()
@@ -42,6 +43,7 @@ app.use('/api/fees', feeRoutes)
 app.use('/api/complaints', complaintRoutes)
 app.use('/api/notices', noticeRoutes)
 app.use('/api/analytics', analyticsRoutes)
+app.use('/api/admissions', admissionRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { 
-  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X
+  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X, FileText
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -18,6 +18,7 @@ export const Sidebar = () => {
 
   const adminMenuItems = [
     { path: '/admin', label: 'Dashboard', icon: Home },
+    { path: '/admin/admissions', label: 'Admissions', icon: FileText },
     { path: '/admin/students', label: 'Students', icon: Users },
     { path: '/admin/rooms', label: 'Rooms', icon: Bed },
     { path: '/admin/fees', label: 'Fees', icon: DollarSign },
@@ -27,6 +28,7 @@ export const Sidebar = () => {
 
   const studentMenuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
+    { path: '/admission', label: 'Admission', icon: FileText },
     { path: '/complaints', label: 'Complaints', icon: AlertCircle },
     { path: '/notices', label: 'Notices', icon: Clipboard }
   ]

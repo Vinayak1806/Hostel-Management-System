@@ -5,6 +5,7 @@ import Room from './models/Room.js'
 import Fee from './models/Fee.js'
 import Complaint from './models/Complaint.js'
 import Notice from './models/Notice.js'
+import Admission from './models/Admission.js'
 
 dotenv.config()
 
@@ -20,6 +21,7 @@ const seedDatabase = async () => {
     await Fee.deleteMany({})
     await Complaint.deleteMany({})
     await Notice.deleteMany({})
+    await Admission.deleteMany({})
     console.log('✓ Cleared existing data')
 
     // Create admin user
@@ -33,7 +35,8 @@ const seedDatabase = async () => {
     console.log('✓ Created admin user')
 
     // Create student users
-    const students = await User.insertMany([
+    const students = []
+    for (const studentData of [
       {
         name: 'John Doe',
         email: 'john@hostel.com',
@@ -70,7 +73,10 @@ const seedDatabase = async () => {
         semester: 4,
         role: 'student'
       }
-    ])
+    ]) {
+      const student = await User.create(studentData)
+      students.push(student)
+    }
     console.log('✓ Created 4 student users')
 
     // Create rooms
@@ -81,7 +87,7 @@ const seedDatabase = async () => {
         capacity: 2,
         currentOccupancy: 2,
         allocatedStudents: [students[0]._id, students[1]._id],
-        status: 'occupied'
+        status: 'full'
       },
       {
         roomNumber: '102',
@@ -222,10 +228,58 @@ const seedDatabase = async () => {
     ])
     console.log('✓ Created 3 notices')
 
+    // Create admission records
+    await Admission.insertMany([
+      {
+        student: students[0]._id,
+        rollNumber: students[0].rollNumber,
+        course: 'B.Tech CSE',
+        year: 3,
+        semester: 5,
+        address: '123 Main Street, New Delhi',
+        phone: students[0].phone || '9876543211',
+        parentPhone: '9999999999',
+        status: 'approved',
+        approvedDate: new Date(),
+        approvedBy: admin._id,
+        roomAssigned: '101',
+        feeGenerated: true
+      },
+      {
+        student: students[1]._id,
+        rollNumber: students[1].rollNumber,
+        course: 'B.Tech CSE',
+        year: 3,
+        semester: 5,
+        address: '456 Oak Avenue, Bangalore',
+        phone: students[1].phone || '9876543212',
+        parentPhone: '9999999998',
+        status: 'pending',
+        feeGenerated: false
+      },
+      {
+        student: students[2]._id,
+        rollNumber: students[2].rollNumber,
+        course: 'B.Tech CSE',
+        year: 2,
+        semester: 3,
+        address: '789 Elm Road, Mumbai',
+        phone: students[2].phone || '9876543213',
+        parentPhone: '9999999997',
+        status: 'pending',
+        feeGenerated: false
+      }
+    ])
+    console.log('✓ Created 3 admission records (1 approved, 2 pending)')
+
     console.log('\n✅ Database seeded successfully!')
     console.log('\nDemo Accounts:')
     console.log('Admin: admin@hostel.com / admin123')
     console.log('Student: john@hostel.com / student123')
+    console.log('\nAdmission Workflow:')
+    console.log('1. Student john is already approved with room allocated (101)')
+    console.log('2. Students jane and bob have pending admission requests')
+    console.log('3. Admin can approve/reject pending admissions at /admin/admissions')
 
     await mongoose.connection.close()
   } catch (error) {
