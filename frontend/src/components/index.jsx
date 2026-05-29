@@ -185,3 +185,5 @@ export const LoadingSpinner = () => {
     </div>
   )
 }
+
+export { LogoutConfirmModal } from './LogoutConfirmModal'

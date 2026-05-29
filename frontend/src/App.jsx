@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext'
 import { ThemeProvider } from './context/ThemeContext'
 
 // Pages
+import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import AdminDashboard from './pages/AdminDashboard'
@@ -37,6 +38,7 @@ function AppRoutes() {
   return (
     <Routes>
       {/* Public Routes */}
+      <Route path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
       <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
       <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
 

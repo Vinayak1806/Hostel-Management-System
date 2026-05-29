@@ -35,6 +35,22 @@ const userSchema = new mongoose.Schema(
       max: 8,
       sparse: true
     },
+    course: {
+      type: String,
+      sparse: true
+    },
+    collegeName: {
+      type: String,
+      sparse: true
+    },
+    permanentAddress: {
+      type: String,
+      sparse: true
+    },
+    parentPhone: {
+      type: String,
+      sparse: true
+    },
     roomNumber: {
       type: String,
       sparse: true

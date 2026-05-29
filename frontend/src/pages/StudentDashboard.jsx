@@ -1,10 +1,21 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Sidebar } from '../components/Sidebar'
-import { Navbar, Card, Badge } from '../components'
+import { Navbar, Card, Button, Alert } from '../components'
 import { useAuth } from '../context/AuthContext'
+import { User, Bed, DollarSign, FileText, Bell, AlertCircle, Clock, Check } from 'lucide-react'
 
 export default function StudentDashboard() {
   const { user } = useAuth()
+  const [feeStatus, setFeeStatus] = useState({ amount: 5000, paid: 0, due: 5000, dueDate: '2026-06-30' })
+  const [recentNotices, setRecentNotices] = useState([
+    { id: 1, title: 'Admission Portal Open', date: '2026-05-29' },
+    { id: 2, title: 'Sports Day - June 15', date: '2026-05-28' },
+    { id: 3, title: 'Fee Submission Deadline', date: '2026-05-25' }
+  ])
+
+  const roomNumber = user?.roomNumber || null
+  const occupancyPercentage = roomNumber ? 75 : 0
 
   return (
     <div className="flex">
@@ -12,78 +23,231 @@ export default function StudentDashboard() {
       <div className="flex-1 md:ml-64">
         <Navbar title="My Dashboard" />
 
-        <main className="container py-8">
-          {/* Welcome Card */}
-          <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-800 text-white">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Welcome, {user?.name}!</h1>
-              <p className="opacity-90">Here's your hostel information and updates</p>
+        <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+          {/* Welcome Banner */}
+          <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 text-white rounded-xl p-8">
+            <div className="flex justify-between items-start">
+              <div>
+                <h1 className="text-4xl font-bold mb-2">Welcome back, {user?.name}! 👋</h1>
+                <p className="text-blue-100">Here's an overview of your hostel status and important updates</p>
+              </div>
+              <div className="text-5xl opacity-20">🏠</div>
             </div>
           </Card>
 
-          {/* Info Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            <Card>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Roll Number</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{user?.rollNumber || 'N/A'}</p>
+          {/* Key Stats Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Room Status Card */}
+            <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                  <Bed className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                </div>
+                {roomNumber && <span className="px-3 py-1 bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 rounded-full text-xs font-semibold">Allocated</span>}
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Room Number</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{roomNumber || 'Not Allocated'}</p>
+              {roomNumber && <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Occupancy: {occupancyPercentage}%</p>}
             </Card>
 
-            <Card>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Semester</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{user?.semester || 'N/A'}</p>
+            {/* Fee Status Card */}
+            <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                  <DollarSign className="w-6 h-6 text-green-600 dark:text-green-400" />
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  feeStatus.due === 0
+                    ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
+                    : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400'
+                }`}>
+                  {feeStatus.due === 0 ? 'Paid' : 'Pending'}
+                </span>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Total Fee</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">₹{feeStatus.amount}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Due: ₹{feeStatus.due}</p>
             </Card>
 
-            <Card>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Room Number</p>
-              <p className="text-xl font-bold text-gray-900 dark:text-white">{user?.roomNumber || 'Not Allocated'}</p>
+            {/* Personal Info Card */}
+            <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                  <User className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Roll Number</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{user?.rollNumber || 'N/A'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Semester: {user?.semester || 'N/A'}</p>
+            </Card>
+
+            {/* Status Overview Card */}
+            <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+              <div className="flex items-start justify-between mb-4">
+                <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
+                  <Check className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                </div>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Account Status</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">Active</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Member since May 2026</p>
             </Card>
           </div>
 
-          {/* Contact & Status */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
-              <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Contact Information</h2>
-              <div className="space-y-4">
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Email</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{user?.email}</p>
+          {/* Two Column Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            {/* Personal Details Section */}
+            <div className="lg:col-span-2 space-y-6">
+              {/* Contact Information */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                  <User className="w-5 h-5 text-blue-600" />
+                  Personal Information
+                </h2>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Full Name</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white">{user?.name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Email Address</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white break-all">{user?.email}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Phone Number</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white">{user?.phone || 'Not provided'}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Roll Number</p>
+                      <p className="text-lg font-semibold text-gray-900 dark:text-white">{user?.rollNumber}</p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Phone</p>
-                  <p className="font-medium text-gray-900 dark:text-white">{user?.phone || 'Not provided'}</p>
-                </div>
-              </div>
-            </Card>
+              </Card>
 
-            <Card>
-              <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">My Status</h2>
-              <div className="space-y-3">
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Fee Status</span>
-                  <Badge status="paid" label="Paid" />
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-gray-600 dark:text-gray-400">Room Allocation</span>
-                  <Badge status="occupied" label="Allocated" />
-                </div>
-              </div>
-            </Card>
-          </div>
+              {/* Room Assignment Details */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                  <Bed className="w-5 h-5 text-green-600" />
+                  Room Assignment
+                </h2>
+                {roomNumber ? (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-6">
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Room Number</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{roomNumber}</p>
+                      </div>
+                      <div>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Floor</p>
+                        <p className="text-2xl font-bold text-gray-900 dark:text-white">{parseInt(roomNumber) > 100 ? '1st' : '2nd'}</p>
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                      <p className="text-sm text-gray-600 dark:text-gray-400">✓ Room successfully allocated</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Check-in completed</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                    <p className="text-yellow-800 dark:text-yellow-200 font-semibold flex items-center gap-2">
+                      <AlertCircle className="w-5 h-5" />
+                      Room not yet allocated
+                    </p>
+                    <p className="text-sm text-yellow-700 dark:text-yellow-300 mt-2">
+                      Submit your admission request to get a room allocated
+                    </p>
+                    <Link to="/admission">
+                      <Button variant="primary" size="sm" className="mt-3">
+                        Submit Admission Request
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+              </Card>
 
-          {/* Quick Links */}
-          <Card className="mt-6">
-            <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Quick Links</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <a href="/complaints" className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors">
-                <p className="font-semibold text-blue-600 dark:text-blue-400">View Complaints</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Track your complaints</p>
-              </a>
-              <a href="/notices" className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors">
-                <p className="font-semibold text-purple-600 dark:text-purple-400">Read Notices</p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Latest announcements</p>
-              </a>
+              {/* Fee Status Details */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
+                  <DollarSign className="w-5 h-5 text-green-600" />
+                  Fee Status
+                </h2>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                    <span className="text-gray-600 dark:text-gray-400">Total Amount</span>
+                    <span className="text-2xl font-bold text-gray-900 dark:text-white">₹{feeStatus.amount}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700">
+                    <span className="text-gray-600 dark:text-gray-400">Amount Paid</span>
+                    <span className="text-2xl font-bold text-green-600 dark:text-green-400">₹{feeStatus.paid}</span>
+                  </div>
+                  <div className="flex justify-between items-center p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700">
+                    <span className="text-gray-600 dark:text-gray-400">Amount Due</span>
+                    <span className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">₹{feeStatus.due}</span>
+                  </div>
+                  <div className="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                      <Clock className="w-4 h-4" />
+                      Due Date: <strong>{feeStatus.dueDate}</strong>
+                    </div>
+                  </div>
+                  <Button variant="primary" className="w-full mt-2">Pay Now</Button>
+                </div>
+              </Card>
             </div>
-          </Card>
+
+            {/* Sidebar Sections */}
+            <div className="space-y-6">
+              {/* Recent Notices */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-blue-600" />
+                  Recent Notices
+                </h2>
+                <div className="space-y-3">
+                  {recentNotices.map((notice) => (
+                    <div key={notice.id} className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer border-l-4 border-blue-600">
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{notice.title}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notice.date}</p>
+                    </div>
+                  ))}
+                </div>
+                <Link to="/notices" className="block mt-4">
+                  <Button variant="secondary" className="w-full">View All Notices</Button>
+                </Link>
+              </Card>
+
+              {/* Quick Actions */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-purple-600" />
+                  Quick Actions
+                </h2>
+                <div className="space-y-3">
+                  <Link to="/admission">
+                    <Button variant="primary" className="w-full">Admission Request</Button>
+                  </Link>
+                  <Link to="/complaints">
+                    <Button variant="secondary" className="w-full">File a Complaint</Button>
+                  </Link>
+                  <Link to="/notices">
+                    <Button variant="secondary" className="w-full">View Announcements</Button>
+                  </Link>
+                </div>
+              </Card>
+
+              {/* Help & Support */}
+              <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
+                <h3 className="font-bold text-blue-900 dark:text-blue-200 mb-2">Need Help?</h3>
+                <p className="text-sm text-blue-800 dark:text-blue-300 mb-4">
+                  Contact the hostel administration for any queries or issues.
+                </p>
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">📞 +91 98765 43210</p>
+                <p className="text-sm font-semibold text-blue-900 dark:text-blue-200">✉️ admin@hostel.com</p>
+              </Card>
+            </div>
+          </div>
         </main>
       </div>
     </div>

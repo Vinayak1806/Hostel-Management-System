@@ -13,10 +13,16 @@ export default function SignupPage() {
     confirmPassword: '',
     role: 'student',
     rollNumber: '',
-    semester: '1'
+    semester: '1',
+    course: '',
+    collegeName: '',
+    permanentAddress: '',
+    parentPhone: ''
   })
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
   const { login } = useAuth()
   const navigate = useNavigate()
 
@@ -37,6 +43,7 @@ export default function SignupPage() {
     }
 
     setLoading(true)
+
     try {
       const response = await authAPI.signup({
         name: formData.name,
@@ -45,8 +52,13 @@ export default function SignupPage() {
         password: formData.password,
         role: formData.role,
         rollNumber: formData.rollNumber,
-        semester: formData.semester
+        semester: formData.semester,
+        course: formData.course,
+        collegeName: formData.collegeName,
+        permanentAddress: formData.permanentAddress,
+        parentPhone: formData.parentPhone
       })
+
       login(response.user, response.token)
       navigate('/dashboard')
     } catch (err) {
@@ -57,107 +69,395 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center p-4 py-8">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8 max-w-md w-full">
-        <h1 className="text-3xl font-bold text-center mb-2 text-gray-900 dark:text-white">HMS</h1>
-        <p className="text-center text-gray-500 dark:text-gray-400 mb-8">Create Your Account</p>
+    <div className="min-h-screen bg-black relative overflow-hidden flex items-center justify-center p-4 before:absolute before:w-[500px] before:h-[500px] before:bg-blue-500/20 before:blur-3xl before:rounded-full before:-top-40 before:-left-40 after:absolute after:w-[500px] after:h-[500px] after:bg-purple-500/20 after:blur-3xl after:rounded-full after:-bottom-40 after:-right-40">
+      
+      <style>{`
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
 
-        {error && <Alert type="error" message={error} onClose={() => setError('')} />}
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input
-            type="text"
-            name="name"
-            label="Full Name"
-            placeholder="John Doe"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            type="email"
-            name="email"
-            label="Email Address"
-            placeholder="your@email.com"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            type="tel"
-            name="phone"
-            label="Phone Number"
-            placeholder="+91 98765 43210"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-          />
+      <div className="bg-white/10 backdrop-blur-2xl border border-white/10 rounded-[32px] shadow-[0_8px_32px_rgba(0,0,0,0.4)] overflow-hidden w-full max-w-5xl relative z-10">
 
-          {formData.role === 'student' && (
-            <>
-              <Input
-                type="text"
-                name="rollNumber"
-                label="Roll Number"
-                placeholder="21CS001"
-                value={formData.rollNumber}
-                onChange={handleChange}
-                required
+        <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[88vh]">
+          
+          {/* Left Side */}
+          <div className="bg-[#0f172a]/90 backdrop-blur-xl p-8 lg:p-10 flex flex-col justify-start">
+            
+            <div className="mb-4">
+              <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">
+                Create Account
+              </h1>
+
+              <p className="text-sm text-gray-400 tracking-wide">
+                Join our hostel community and manage everything smarter.
+              </p>
+            </div>
+
+            {error && (
+              <Alert
+                type="error"
+                message={error}
+                onClose={() => setError('')}
               />
-              <Select
-                name="semester"
-                label="Semester"
-                value={formData.semester}
-                onChange={handleChange}
-                options={[
-                  { value: '1', label: '1st Semester' },
-                  { value: '2', label: '2nd Semester' },
-                  { value: '3', label: '3rd Semester' },
-                  { value: '4', label: '4th Semester' },
-                  { value: '5', label: '5th Semester' },
-                  { value: '6', label: '6th Semester' },
-                  { value: '7', label: '7th Semester' },
-                  { value: '8', label: '8th Semester' }
-                ]}
-              />
-            </>
-          )}
+            )}
 
-          <Input
-            type="password"
-            name="password"
-            label="Password"
-            placeholder="••••••••"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            type="password"
-            name="confirmPassword"
-            label="Confirm Password"
-            placeholder="••••••••"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            required
-          />
+            <form
+              onSubmit={handleSubmit}
+              className="space-y-4 overflow-y-auto hide-scrollbar pr-2 mt-4"
+              style={{ maxHeight: 'calc(88vh - 120px)' }}
+            >
 
-          <Button
-            type="submit"
-            variant="primary"
-            className="w-full"
-            disabled={loading}
-          >
-            {loading ? 'Creating Account...' : 'Sign Up'}
-          </Button>
-        </form>
+              {/* Name + Phone */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                    Full Name
+                  </label>
 
-        <p className="text-center text-gray-600 dark:text-gray-400 mt-6">
-          Already have an account?{' '}
-          <Link to="/login" className="text-blue-600 hover:underline font-medium">
-            Sign In
-          </Link>
-        </p>
+                  <Input
+                    type="text"
+                    name="name"
+                    placeholder="John Doe"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                    Phone Number
+                  </label>
+
+                  <Input
+                    type="tel"
+                    name="phone"
+                    placeholder="+91 98765 43210"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div>
+                <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                  Email Address
+                </label>
+
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="your@email.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                  required
+                />
+              </div>
+
+              {/* Student Fields */}
+              {formData.role === 'student' && (
+                <>
+                  {/* Roll + Semester */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                        Roll Number
+                      </label>
+
+                      <Input
+                        type="text"
+                        name="rollNumber"
+                        placeholder="21CS001"
+                        value={formData.rollNumber}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                        Semester
+                      </label>
+
+                      <Select
+                        name="semester"
+                        value={formData.semester}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                        options={[
+                          { value: '1', label: '1st Semester' },
+                          { value: '2', label: '2nd Semester' },
+                          { value: '3', label: '3rd Semester' },
+                          { value: '4', label: '4th Semester' },
+                          { value: '5', label: '5th Semester' },
+                          { value: '6', label: '6th Semester' },
+                          { value: '7', label: '7th Semester' },
+                          { value: '8', label: '8th Semester' }
+                        ]}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Course + College */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                        Course
+                      </label>
+
+                      <Input
+                        type="text"
+                        name="course"
+                        placeholder="B.Tech / B.Sc"
+                        value={formData.course}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                        required
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                        College Name
+                      </label>
+
+                      <Input
+                        type="text"
+                        name="collegeName"
+                        placeholder="College Name"
+                        value={formData.collegeName}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                        required
+                      />
+                    </div>
+                  </div>
+
+                  {/* Address */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                      Permanent Address
+                    </label>
+
+                    <Input
+                      type="text"
+                      name="permanentAddress"
+                      placeholder="Your permanent address"
+                      value={formData.permanentAddress}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                      required
+                    />
+                  </div>
+
+                  {/* Parent Phone */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                      Parent Phone Number
+                    </label>
+
+                    <Input
+                      type="tel"
+                      name="parentPhone"
+                      placeholder="+91 98765 43210"
+                      value={formData.parentPhone}
+                      onChange={handleChange}
+                      className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                      required
+                    />
+                  </div>
+                </>
+              )}
+
+              {/* Passwords */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                    Password
+                  </label>
+
+                  <Input
+                    type="password"
+                    name="password"
+                    placeholder="••••••••"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
+                    Confirm Password
+                  </label>
+
+                  <Input
+                    type="password"
+                    name="confirmPassword"
+                    placeholder="••••••••"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Button */}
+              <Button
+                type="submit"
+                className="w-full mt-4 bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/30 text-white font-bold py-3 px-4 text-sm rounded-2xl transition-all duration-300"
+                disabled={loading}
+              >
+                {loading ? 'Creating Account...' : 'Sign Up'}
+              </Button>
+            </form>
+
+            {/* Login */}
+            <p className="text-center text-gray-400 mt-6 text-sm">
+              Already have an account?{' '}
+              <Link
+                to="/login"
+                className="text-blue-400 hover:text-white font-semibold transition-all duration-300"
+              >
+                Sign In
+              </Link>
+            </p>
+          </div>
+
+          {/* Right Side */}
+          <div className="hidden lg:flex flex-col justify-center items-center bg-gradient-to-br from-blue-700 via-blue-800 to-purple-900 p-10 text-white relative overflow-hidden">
+            
+            <div className="absolute w-96 h-96 bg-white/10 rounded-full blur-3xl"></div>
+
+            <div className="relative z-10 text-center">
+              
+              <div className="inline-block bg-white/10 backdrop-blur-lg rounded-full p-6 mb-6 border border-white/20 shadow-xl">
+                <svg
+                  className="w-14 h-14"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+              </div>
+
+              <h2 className="text-4xl font-extrabold mb-4 tracking-tight">
+                Welcome to HMS
+              </h2>
+
+              <p className="text-lg mb-8 text-blue-100 leading-relaxed">
+                Your perfect hostel home awaits
+              </p>
+
+              <div className="space-y-4 text-left">
+                
+                <div className="flex items-start gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-lg hover:bg-white/10 transition-all duration-300">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="w-5 h-5 text-blue-200"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base">
+                      Safe & Secure
+                    </p>
+
+                    <p className="text-sm text-blue-100/80">
+                      24/7 security monitoring
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-lg hover:bg-white/10 transition-all duration-300">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="w-5 h-5 text-blue-200"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base">
+                      World-Class Facilities
+                    </p>
+
+                    <p className="text-sm text-blue-100/80">
+                      WiFi, dining, recreation
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-start gap-4 bg-white/5 border border-white/10 rounded-2xl p-4 backdrop-blur-lg hover:bg-white/10 transition-all duration-300">
+                  <div className="flex-shrink-0">
+                    <svg
+                      className="w-5 h-5 text-blue-200"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+
+                  <div>
+                    <p className="font-semibold text-base">
+                      Vibrant Community
+                    </p>
+
+                    <p className="text-sm text-blue-100/80">
+                      500+ happy students
+                    </p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   )

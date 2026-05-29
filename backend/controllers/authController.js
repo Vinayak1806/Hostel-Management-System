@@ -11,7 +11,7 @@ const generateToken = (user) => {
 
 export const signup = async (req, res) => {
   try {
-    const { name, email, phone, password, role = 'student', rollNumber, semester } = req.body
+    const { name, email, phone, password, role = 'student', rollNumber, semester, course, collegeName, permanentAddress, parentPhone } = req.body
 
     let user = await User.findOne({ email })
     if (user) {
@@ -25,7 +25,11 @@ export const signup = async (req, res) => {
       password,
       role,
       rollNumber: role === 'student' ? rollNumber : undefined,
-      semester: role === 'student' ? semester : undefined
+      semester: role === 'student' ? semester : undefined,
+      course: role === 'student' ? course : undefined,
+      collegeName: role === 'student' ? collegeName : undefined,
+      permanentAddress: role === 'student' ? permanentAddress : undefined,
+      parentPhone: role === 'student' ? parentPhone : undefined
     })
 
     await user.save()
