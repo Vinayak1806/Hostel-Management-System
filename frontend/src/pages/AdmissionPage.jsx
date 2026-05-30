@@ -14,6 +14,7 @@ export default function AdmissionPage() {
   const [success, setSuccess] = useState('')
   
   const [formData, setFormData] = useState({
+    rollNumber: '',
     course: '',
     year: 1,
     semester: 1,
@@ -156,6 +157,16 @@ export default function AdmissionPage() {
                                 type="text"
                                 placeholder="e.g., B.Tech CSE"
                                 value={formData.course}
+                                onChange={handleChange}
+                                required
+                              />
+
+                              <Input
+                                label="Roll Number"
+                                name="rollNumber"
+                                type="text"
+                                placeholder="e.g., 2023CS101"
+                                value={formData.rollNumber}
                                 onChange={handleChange}
                                 required
                               />

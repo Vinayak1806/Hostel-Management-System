@@ -7,7 +7,7 @@ import Notification from '../models/Notification.js'
 // Student submits admission request
 export const submitAdmissionRequest = async (req, res) => {
   try {
-    const { course, year, semester, address, parentPhone, collegeName, fatherName, motherName, bloodGroup } = req.body
+    const { course, year, semester, address, parentPhone, collegeName, fatherName, motherName, bloodGroup, rollNumber } = req.body
     const studentId = req.user.id
 
     // Check if student already has a pending or approved admission
@@ -33,7 +33,7 @@ export const submitAdmissionRequest = async (req, res) => {
     // Create admission request
     const admission = await Admission.create({
       student: studentId,
-      rollNumber: student.rollNumber,
+      rollNumber,
       course,
       year,
       semester,
