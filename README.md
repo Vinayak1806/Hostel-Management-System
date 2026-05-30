@@ -1,303 +1,161 @@
-# Hostel Management System
+<p align="center">
+  <img src="frontend/public/logo.jpeg" alt="Hostel Hub Logo" width="120" height="120" style="border-radius: 50%;" />
+</p>
 
-A modern, full-stack web application for managing hostel operations including student records, room allocation, fee tracking, complaints, and announcements. Built with React, Node.js, Express, and MongoDB.
+<h1 align="center">Hostel Hub — Smart Hostel Management System</h1>
 
-## 🚀 Features
+<p align="center">
+  A full-stack MERN web application to digitize and streamline hostel administration for students and administrators.
+</p>
 
-### For Students
-- ✅ User authentication with JWT
-- ✅ View personal dashboard with room info
-- ✅ File complaints with status tracking
-- ✅ View notices and announcements
-- ✅ Track fees and payment status
-- ✅ Dark mode support
+<p align="center">
+  <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black" />
+  <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+  <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=express&logoColor=white" />
+  <img src="https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white" />
+</p>
 
-### For Administrators
-- ✅ Complete student management (Add/Edit/Delete)
-- ✅ Room allocation with capacity checking
-- ✅ Fee management and payment tracking
-- ✅ Complaint management with status updates
-- ✅ Post and manage notices
-- ✅ Analytics dashboard with charts
-  - Total students, rooms, occupancy
-  - Pending fees, open complaints
-  - Fee collection progress
-- ✅ Role-based access control
+---
 
-### Technical Features
-- ✅ JWT authentication with role-based access
-- ✅ Responsive design (Mobile, Tablet, Desktop)
-- ✅ Dark/Light theme toggle
-- ✅ Real-time data updates
-- ✅ Error handling and validation
-- ✅ MVC architecture in backend
-- ✅ RESTful API endpoints
+## 📌 Objective
 
-## 🛠 Tech Stack
+**Hostel Hub** replaces traditional paper-based hostel management with a modern digital platform. It provides separate dashboards for Admins and Students, enabling efficient management of admissions, room allocation, fee payments, attendance tracking, complaints, and real-time notifications — all from a single responsive web interface.
 
-**Frontend:**
-- React 18 with Vite
-- Tailwind CSS for styling
-- React Router for navigation
-- Axios for API calls
-- Context API for state management
+---
 
-**Backend:**
-- Node.js with Express.js
-- MongoDB with Mongoose
-- JWT for authentication
-- bcryptjs for password hashing
-- CORS for cross-origin requests
+## ✨ Features
 
-**Database:**
-- MongoDB (local or cloud)
+### Student Side
+- **Secure Authentication** — Register and login with JWT-based authentication
+- **Admission Portal** — Submit hostel admission requests with academic and personal details
+- **Room Details** — View allocated room information after admin approval
+- **Fee Management** — Track pending fees, view payment history, and process payments
+- **Attendance Tracker** — View daily attendance records and summary statistics
+- **Complaint System** — Raise maintenance or hostel-related complaints
+- **Notification Center** — Receive real-time alerts, announcements, and fee reminders
+- **Notice Board** — Stay updated with the latest hostel notices
 
-## 📋 Prerequisites
+### Admin Side
+- **Admin Dashboard** — Overview of all hostel statistics at a glance
+- **Admission Management** — Review, approve, or reject student admission requests
+- **Room Management** — Add rooms, manage capacity, and allocate students
+- **Student Management** — View and manage all registered students
+- **Payment Dashboard** — Monitor fee collection and pending dues
+- **Attendance Panel** — Mark and manage student attendance records
+- **System-wide Notifications** — Send broadcast alerts and announcements to all students
+- **Complaint Resolution** — Track and resolve student complaints
 
-- Node.js (v16 or higher)
-- MongoDB (local instance or Atlas)
-- npm or yarn
+### General
+- **Dark/Light Mode** — Full theme toggle support across the application
+- **Responsive Design** — Works seamlessly on desktop, tablet, and mobile
+- **Toast Notifications** — Global floating alerts for success/error messages
 
-## 🔧 Installation & Setup
+---
 
-### 1. Clone or Extract Project
-```bash
-cd "d:\Programs\Web Development Project\project"
-```
+## 🛠️ Tech Stack
 
-### 2. Backend Setup
-```bash
-cd hostel-management-backend
+| Layer        | Technology                          |
+|--------------|-------------------------------------|
+| **Frontend** | React.js (Vite), Tailwind CSS, React Router, Axios, Lucide Icons |
+| **Backend**  | Node.js, Express.js                 |
+| **Database** | MongoDB (Mongoose ODM)              |
+| **Auth**     | JSON Web Tokens (JWT), Bcrypt.js    |
+| **Deployment** | Vercel (Frontend), Render (Backend) |
 
-# Install dependencies
-npm install
-
-# Create .env file (copy from .env.example)
-cp .env.example .env
-
-# Update .env with your MongoDB URI
-# MONGODB_URI=mongodb://localhost:27017/hostel-management
-# JWT_SECRET=your_secret_key_here
-
-# Start development server
-npm run dev
-
-# Server runs on http://localhost:5000
-```
-
-### 3. Frontend Setup
-```bash
-cd ../hostel-management-frontend
-
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-
-# App runs on http://localhost:5173
-```
-
-## 📊 Database Setup
-
-### Option 1: Local MongoDB
-```bash
-# Make sure MongoDB is running
-mongod
-
-# Create database (automatic on first insert)
-# Database name: hostel-management
-```
-
-### Option 2: MongoDB Atlas (Cloud)
-1. Go to https://www.mongodb.com/cloud/atlas
-2. Create a free account
-3. Create a cluster
-4. Get connection string
-5. Add to `.env`:
-   ```
-   MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/hostel-management
-   ```
-
-## 📱 API Endpoints
-
-### Authentication
-- `POST /api/auth/signup` - Register new user
-- `POST /api/auth/login` - User login
-- `POST /api/auth/logout` - User logout
-- `GET /api/auth/me` - Get current user
-
-### Students (Admin only)
-- `GET /api/students` - List all students
-- `GET /api/students/:id` - Get student details
-- `POST /api/students` - Create student
-- `PUT /api/students/:id` - Update student
-- `DELETE /api/students/:id` - Delete student
-
-### Rooms (Admin)
-- `GET /api/rooms` - List all rooms
-- `GET /api/rooms/:id` - Get room details
-- `POST /api/rooms` - Create room
-- `PUT /api/rooms/:id` - Update room
-- `DELETE /api/rooms/:id` - Delete room
-- `POST /api/rooms/:id/allocate` - Allocate student to room
-
-### Fees (Admin)
-- `GET /api/fees` - List all fees
-- `GET /api/fees/student/my-fees` - Student's fees
-- `POST /api/fees` - Create fee entry
-- `PATCH /api/fees/:id/mark-paid` - Mark fee as paid
-
-### Complaints
-- `GET /api/complaints` - List all complaints (admin)
-- `GET /api/complaints/student/my-complaints` - Student's complaints
-- `POST /api/complaints` - File complaint
-- `PATCH /api/complaints/:id/status` - Update status (admin)
-- `DELETE /api/complaints/:id` - Delete complaint
-
-### Notices
-- `GET /api/notices` - List all notices
-- `POST /api/notices` - Create notice (admin)
-- `DELETE /api/notices/:id` - Delete notice (admin)
-
-### Analytics
-- `GET /api/analytics/dashboard` - Dashboard data (admin)
-
-## 👤 Demo Accounts
-
-### Admin
-- **Email:** admin@hostel.com
-- **Password:** admin123
-
-### Student
-- **Email:** student@hostel.com
-- **Password:** student123
+---
 
 ## 📁 Project Structure
 
 ```
-hostel-management-system/
-├── hostel-management-frontend/
-│   ├── src/
-│   │   ├── components/      # Reusable UI components
-│   │   ├── pages/           # Page components
-│   │   ├── context/         # Auth & Theme context
-│   │   ├── services/        # API calls
-│   │   ├── utils/           # Helper functions
-│   │   ├── App.jsx
-│   │   └── main.jsx
-│   ├── index.html
-│   ├── package.json
-│   └── vite.config.js
+Hostel-Hub/
+├── backend/
+│   ├── config/          # Database connection
+│   ├── controllers/     # Business logic for each feature
+│   ├── middleware/       # JWT authentication & admin checks
+│   ├── models/          # Mongoose schemas (User, Room, Payment, etc.)
+│   ├── routes/          # API endpoint definitions
+│   └── server.js        # Express app entry point
 │
-├── hostel-management-backend/
-│   ├── models/              # MongoDB schemas
-│   ├── controllers/         # Business logic
-│   ├── routes/              # API routes
-│   ├── middleware/          # Auth & validation
-│   ├── config/              # Database config
-│   ├── server.js            # Main server file
-│   └── package.json
+├── frontend/
+│   ├── public/          # Static assets (logo)
+│   └── src/
+│       ├── components/  # Reusable UI components (Sidebar, Navbar, Alert)
+│       ├── context/     # AuthContext & ThemeContext providers
+│       ├── pages/       # All application screens
+│       ├── services/    # Axios API client & endpoint methods
+│       └── App.jsx      # Route configuration
 │
-└── PROJECT_PROGRESS.md      # Project tracking
+├── logo.jpeg
+├── DEPLOYMENT_GUIDE.md
+├── project-documentation.md
+└── README.md
 ```
-
-## 🎨 UI Components
-
-- **Navbar** - Top navigation with theme toggle
-- **Sidebar** - Navigation menu (responsive)
-- **Card** - Reusable card component
-- **Button** - Button variants (primary, secondary, danger)
-- **Input** - Text input with validation
-- **Select** - Dropdown select
-- **Textarea** - Multi-line text input
-- **Badge** - Status badges
-- **Table** - Data table with sorting
-- **Modal** - Dialog component
-- **Alert** - Notification alerts
-- **LoadingSpinner** - Loading indicator
-
-## 🔐 Security Features
-
-- ✅ JWT token-based authentication
-- ✅ Password hashing with bcryptjs
-- ✅ Role-based access control
-- ✅ Protected API endpoints
-- ✅ CORS configuration
-- ✅ Input validation
-
-## 🧪 Testing
-
-### Test Student Registration
-1. Go to http://localhost:5173/signup
-2. Fill in details
-3. Click Sign Up
-
-### Test Admin Login
-1. Go to http://localhost:5173/login
-2. Use: admin@hostel.com / admin123
-3. View admin dashboard
-
-### Test Features
-- Create/Update/Delete students
-- Allocate rooms
-- Manage fees
-- File complaints
-- Create notices
-
-## 📈 Deployment
-
-### Backend (Heroku/Railway)
-```bash
-# Set environment variables
-heroku config:set MONGODB_URI=your_mongo_uri
-heroku config:set JWT_SECRET=your_secret
-
-# Deploy
-git push heroku main
-```
-
-### Frontend (Vercel/Netlify)
-```bash
-# Update API base URL in apiClient.js
-npm run build
-# Deploy dist folder
-```
-
-## 🐛 Troubleshooting
-
-### MongoDB Connection Error
-- Ensure MongoDB is running
-- Check connection string in .env
-- Verify username/password for Atlas
-
-### CORS Error
-- Check CORS configuration in server.js
-- Verify frontend URL matches
-
-### Port Already in Use
-```bash
-# Backend (5000)
-lsof -i :5000
-kill -9 <PID>
-
-# Frontend (5173)
-lsof -i :5173
-kill -9 <PID>
-```
-
-## 📝 License
-
-This project is open source and available for educational purposes.
-
-## 🤝 Contributing
-
-Feel free to fork, modify, and improve this project for your needs.
-
-## 📧 Support
-
-For issues or questions, please create an issue in the repository.
 
 ---
 
-**Built with ❤️ for hostel management**
+## ⚙️ Local Setup Instructions
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) (v18 or above)
+- [MongoDB](https://www.mongodb.com/) (Local or Atlas)
+- [Git](https://git-scm.com/)
+
+### Step 1 — Clone the Repository
+```bash
+git clone https://github.com/Vinayak1806/Hostel-Management-System.git
+cd Hostel-Management-System
+```
+
+### Step 2 — Setup Backend
+```bash
+cd backend
+npm install
+```
+Create a `.env` file inside the `backend` folder:
+```
+MONGODB_URI=mongodb://localhost:27017/hostel-management
+JWT_SECRET=your_secret_key_here
+PORT=5000
+```
+Start the backend server:
+```bash
+npm run dev
+```
+
+### Step 3 — Setup Frontend
+Open a new terminal:
+```bash
+cd frontend
+npm install
+```
+Create a `.env` file inside the `frontend` folder:
+```
+VITE_API_URL=http://localhost:5000/api
+```
+Start the frontend:
+```bash
+npm run dev
+```
+
+### Step 4 — Open the Application
+Visit **http://localhost:5173** in your browser. The application is now running locally!
+
+---
+
+## 🌐 Live Demo
+
+| Service   | Link |
+|-----------|------|
+| **Frontend (Vercel)** | [https://hostel-hub.vercel.app](https://hostel-hub.vercel.app) |
+| **Backend API (Render)** | [https://hostel-management-system-rywc.onrender.com](https://hostel-management-system-rywc.onrender.com) |
+
+> **Note:** The Render free tier may take ~30 seconds to wake up on the first request after inactivity.
+
+---
+
+## 👨‍💻 Author
+
+**Vinayak Pawate**
+
+---
