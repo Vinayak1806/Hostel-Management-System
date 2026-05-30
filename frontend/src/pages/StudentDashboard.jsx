@@ -289,13 +289,13 @@ export default function StudentDashboard() {
                   Quick Actions
                 </h2>
                 <div className="space-y-3">
-                  <Link to="/admission">
+                  <Link to="/admission" className="block w-full">
                     <Button variant="primary" className="w-full">Admission Request</Button>
                   </Link>
-                  <Link to="/complaints">
+                  <Link to="/complaints" className="block w-full">
                     <Button variant="secondary" className="w-full">File a Complaint</Button>
                   </Link>
-                  <Link to="/notices">
+                  <Link to="/notices" className="block w-full">
                     <Button variant="secondary" className="w-full">View Announcements</Button>
                   </Link>
                 </div>

@@ -89,6 +89,6 @@ export const notificationAPI = {
   markAllAsRead: () => apiClient.put('/notifications/read-all'),
   deleteNotification: (notificationId) => apiClient.delete(`/notifications/${notificationId}`),
   clearAll: () => apiClient.delete('/notifications/clear-all'),
-  sendNotification: (userId, data) => apiClient.post(`/notifications/send/${userId}`, data),
+  sendNotification: (data) => apiClient.post('/notifications/send', data),
   sendBulkNotifications: (data) => apiClient.post('/notifications/bulk', data)
 }

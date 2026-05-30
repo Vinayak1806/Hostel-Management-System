@@ -138,11 +138,11 @@ export const getNotificationStats = async (req, res) => {
 export const sendNotification = async (req, res) => {
   try {
     const { recipient, title, message, type, category, actionUrl } = req.body
-    const { userId } = req.params // Admin/System user
+    const senderId = req.user.id
 
     const notification = new Notification({
       recipient,
-      sender: userId,
+      sender: senderId,
       title,
       message,
       type,
@@ -162,11 +162,11 @@ export const sendNotification = async (req, res) => {
 export const sendBulkNotifications = async (req, res) => {
   try {
     const { recipients, title, message, type, category } = req.body
-    const { userId } = req.params
+    const senderId = req.user.id
 
     const notifications = recipients.map(recipientId => ({
       recipient: recipientId,
-      sender: userId,
+      sender: senderId,
       title,
       message,
       type,

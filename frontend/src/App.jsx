@@ -38,7 +38,15 @@ const ProtectedRoute = ({ children, requiredRole = null }) => {
 }
 
 function AppRoutes() {
-  const { isAuthenticated, isAdmin } = useAuth()
+  const { isAuthenticated, isAdmin, loading } = useAuth()
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-slate-50 dark:bg-gray-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-4 border-blue-600"></div>
+      </div>
+    )
+  }
 
   return (
     <Routes>

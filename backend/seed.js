@@ -2,10 +2,11 @@ import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 import User from './models/User.js'
 import Room from './models/Room.js'
-import Fee from './models/Fee.js'
+import Payment from './models/Payment.js'
 import Complaint from './models/Complaint.js'
 import Notice from './models/Notice.js'
 import Admission from './models/Admission.js'
+import Notification from './models/Notification.js'
 
 dotenv.config()
 
@@ -18,37 +19,37 @@ const seedDatabase = async () => {
     // Clear existing data
     await User.deleteMany({})
     await Room.deleteMany({})
-    await Fee.deleteMany({})
+    await Payment.deleteMany({})
     await Complaint.deleteMany({})
     await Notice.deleteMany({})
     await Admission.deleteMany({})
-    console.log('✓ Cleared existing data')
+    await Notification.deleteMany({})
+    console.log('✓ Cleared all existing data from database')
 
     // Create admin user
     const admin = await User.create({
-      name: 'Admin User',
+      name: 'Rajesh Kumar',
       email: 'admin@hostel.com',
       phone: '9876543210',
       password: 'admin123',
       role: 'admin'
     })
-    console.log('✓ Created admin user')
+    console.log('✓ Created Admin: Rajesh Kumar')
 
     // Create student users
-    const students = []
-    for (const studentData of [
+    const studentsData = [
       {
-        name: 'John Doe',
-        email: 'john@hostel.com',
+        name: 'Aarav Sharma',
+        email: 'aarav@hostel.com',
         phone: '9876543211',
         password: 'student123',
         rollNumber: '21CS001',
-        semester: 3,
+        semester: 5,
         role: 'student'
       },
       {
-        name: 'Jane Smith',
-        email: 'jane@hostel.com',
+        name: 'Priyanshu Patel',
+        email: 'priyanshu@hostel.com',
         phone: '9876543212',
         password: 'student123',
         rollNumber: '21CS002',
@@ -56,28 +57,31 @@ const seedDatabase = async () => {
         role: 'student'
       },
       {
-        name: 'Bob Wilson',
-        email: 'bob@hostel.com',
+        name: 'Rohan Verma',
+        email: 'rohan@hostel.com',
         phone: '9876543213',
         password: 'student123',
         rollNumber: '21CS003',
-        semester: 2,
+        semester: 3,
         role: 'student'
       },
       {
-        name: 'Alice Brown',
-        email: 'alice@hostel.com',
+        name: 'Ananya Iyer',
+        email: 'ananya@hostel.com',
         phone: '9876543214',
         password: 'student123',
         rollNumber: '21CS004',
-        semester: 4,
+        semester: 7,
         role: 'student'
       }
-    ]) {
+    ]
+
+    const students = []
+    for (const studentData of studentsData) {
       const student = await User.create(studentData)
       students.push(student)
     }
-    console.log('✓ Created 4 student users')
+    console.log('✓ Created 4 Indian student users')
 
     // Create rooms
     const rooms = await Room.insertMany([
@@ -117,56 +121,56 @@ const seedDatabase = async () => {
     console.log('✓ Created 4 rooms')
 
     // Update students with room numbers
-    await User.findByIdAndUpdate(students[0]._id, { roomNumber: '101' })
-    await User.findByIdAndUpdate(students[1]._id, { roomNumber: '101' })
-    await User.findByIdAndUpdate(students[2]._id, { roomNumber: '102' })
-    await User.findByIdAndUpdate(students[3]._id, { roomNumber: '201' })
+    await User.findByIdAndUpdate(students[0]._id, { roomNumber: '101', isActive: true })
+    await User.findByIdAndUpdate(students[1]._id, { roomNumber: '101', isActive: true })
+    await User.findByIdAndUpdate(students[2]._id, { roomNumber: '102', isActive: true })
+    await User.findByIdAndUpdate(students[3]._id, { roomNumber: '201', isActive: true })
 
-    // Create fees
+    // Create fees/payments using correct Payment model schema
     const today = new Date()
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
     
-    await Fee.insertMany([
+    await Payment.insertMany([
       {
         student: students[0]._id,
-        studentName: students[0].name,
-        studentRoll: students[0].rollNumber,
         amount: 5000,
         dueDate: nextMonth,
-        status: 'paid',
-        paidDate: new Date(),
-        description: 'Hostel Fee - May 2026'
+        status: 'completed',
+        paidAt: new Date(),
+        description: 'Hostel Fee - May 2026',
+        paymentMethod: 'razorpay',
+        semester: 5
       },
       {
         student: students[1]._id,
-        studentName: students[1].name,
-        studentRoll: students[1].rollNumber,
         amount: 5000,
         dueDate: nextMonth,
-        status: 'unpaid',
-        description: 'Hostel Fee - May 2026'
+        status: 'pending',
+        description: 'Hostel Fee - May 2026',
+        paymentMethod: 'razorpay',
+        semester: 3
       },
       {
         student: students[2]._id,
-        studentName: students[2].name,
-        studentRoll: students[2].rollNumber,
         amount: 5000,
         dueDate: nextMonth,
-        status: 'paid',
-        paidDate: new Date(),
-        description: 'Hostel Fee - May 2026'
+        status: 'completed',
+        paidAt: new Date(),
+        description: 'Hostel Fee - May 2026',
+        paymentMethod: 'razorpay',
+        semester: 3
       },
       {
         student: students[3]._id,
-        studentName: students[3].name,
-        studentRoll: students[3].rollNumber,
         amount: 5000,
         dueDate: nextMonth,
-        status: 'unpaid',
-        description: 'Hostel Fee - May 2026'
+        status: 'pending',
+        description: 'Hostel Fee - May 2026',
+        paymentMethod: 'razorpay',
+        semester: 7
       }
     ])
-    console.log('✓ Created 4 fee entries')
+    console.log('✓ Created 4 payment entries')
 
     // Create complaints
     await Complaint.insertMany([
@@ -174,7 +178,7 @@ const seedDatabase = async () => {
         student: students[0]._id,
         studentName: students[0].name,
         title: 'Water tap is leaking',
-        description: 'The water tap in room 101 is leaking constantly.',
+        description: 'The bathroom water tap in room 101 is leaking constantly.',
         category: 'maintenance',
         status: 'resolved',
         priority: 'high',
@@ -184,8 +188,8 @@ const seedDatabase = async () => {
       {
         student: students[1]._id,
         studentName: students[1].name,
-        title: 'Food quality issue',
-        description: 'The food served today was not fresh.',
+        title: 'Mess food quality issue',
+        description: 'The food served at breakfast today was cold and poorly prepared.',
         category: 'food',
         status: 'in-progress',
         priority: 'medium'
@@ -193,9 +197,9 @@ const seedDatabase = async () => {
       {
         student: students[2]._id,
         studentName: students[2].name,
-        title: 'Cleanliness issue in corridor',
-        description: 'The corridors are not being cleaned regularly.',
-        category: 'cleanliness',
+        title: 'WiFi connection drops',
+        description: 'The WiFi router on the 1st floor drops connectivity frequently.',
+        category: 'maintenance',
         status: 'pending',
         priority: 'low'
       }
@@ -206,14 +210,14 @@ const seedDatabase = async () => {
     await Notice.insertMany([
       {
         title: 'Hostel Maintenance Schedule',
-        content: 'Hostel maintenance will be conducted on the first Saturday of every month. Please ensure your rooms are accessible.',
+        content: 'Hostel maintenance checkups will be conducted on the first Saturday of every month. Please ensure your rooms are accessible.',
         category: 'maintenance',
         postedBy: admin._id,
         isActive: true
       },
       {
         title: 'Sports Day Announcement',
-        content: 'Annual hostel sports day will be held on June 15, 2026. All students are invited to participate.',
+        content: 'Annual hostel sports and athletic meet will be held on June 15, 2026. All students are invited to register.',
         category: 'event',
         postedBy: admin._id,
         isActive: true
@@ -228,7 +232,7 @@ const seedDatabase = async () => {
     ])
     console.log('✓ Created 3 notices')
 
-    // Create admission records
+    // Create admission records with new fields
     await Admission.insertMany([
       {
         student: students[0]._id,
@@ -236,7 +240,11 @@ const seedDatabase = async () => {
         course: 'B.Tech CSE',
         year: 3,
         semester: 5,
-        address: '123 Main Street, New Delhi',
+        address: 'Sector 15, Rohini, New Delhi, 110089',
+        collegeName: 'Delhi Technological University',
+        fatherName: 'Sanjay Sharma',
+        motherName: 'Ritu Sharma',
+        bloodGroup: 'A+',
         phone: students[0].phone || '9876543211',
         parentPhone: '9999999999',
         status: 'approved',
@@ -249,38 +257,101 @@ const seedDatabase = async () => {
         student: students[1]._id,
         rollNumber: students[1].rollNumber,
         course: 'B.Tech CSE',
-        year: 3,
-        semester: 5,
-        address: '456 Oak Avenue, Bangalore',
+        year: 2,
+        semester: 3,
+        address: 'Flat 402, Oakwood Towers, Mumbai, 400053',
+        collegeName: 'Indian Institute of Technology Bombay',
+        fatherName: 'Deepak Patel',
+        motherName: 'Meena Patel',
+        bloodGroup: 'O+',
         phone: students[1].phone || '9876543212',
         parentPhone: '9999999998',
-        status: 'pending',
-        feeGenerated: false
+        status: 'approved',
+        approvedDate: new Date(),
+        approvedBy: admin._id,
+        roomAssigned: '101',
+        feeGenerated: true
       },
       {
         student: students[2]._id,
         rollNumber: students[2].rollNumber,
-        course: 'B.Tech CSE',
+        course: 'B.Tech IT',
         year: 2,
         semester: 3,
-        address: '789 Elm Road, Mumbai',
+        address: 'H-20, Indira Nagar, Lucknow, 226016',
+        collegeName: 'IIIT Allahabad',
+        fatherName: 'Alok Verma',
+        motherName: 'Sunita Verma',
+        bloodGroup: 'B+',
         phone: students[2].phone || '9876543213',
         parentPhone: '9999999997',
-        status: 'pending',
-        feeGenerated: false
+        status: 'approved',
+        approvedDate: new Date(),
+        approvedBy: admin._id,
+        roomAssigned: '102',
+        feeGenerated: true
+      },
+      {
+        student: students[3]._id,
+        rollNumber: students[3].rollNumber,
+        course: 'M.Tech AI',
+        year: 4,
+        semester: 7,
+        address: 'Mylapore, Chennai, 600004',
+        collegeName: 'Anna University, Chennai',
+        fatherName: 'Venkat Iyer',
+        motherName: 'Lalitha Iyer',
+        bloodGroup: 'AB+',
+        phone: students[3].phone || '9876543214',
+        parentPhone: '9999999996',
+        status: 'approved',
+        approvedDate: new Date(),
+        approvedBy: admin._id,
+        roomAssigned: '201',
+        feeGenerated: true
       }
     ])
-    console.log('✓ Created 3 admission records (1 approved, 2 pending)')
+    console.log('✓ Created 4 approved admission records')
+
+    // Create custom pending admission for Priyanshu and Rohan to demonstrate flow
+    // Wiping Priyanshu and Rohan's room assignments and active states to put them in pending
+    await User.findByIdAndUpdate(students[1]._id, { roomNumber: null, isActive: false })
+    await User.findByIdAndUpdate(students[2]._id, { roomNumber: null, isActive: false })
+    
+    // Deallocating them from rooms 101 and 102
+    await Room.findOneAndUpdate({ roomNumber: '101' }, { currentOccupancy: 1, allocatedStudents: [students[0]._id], status: 'available' })
+    await Room.findOneAndUpdate({ roomNumber: '102' }, { currentOccupancy: 0, allocatedStudents: [], status: 'available' })
+
+    // Setting their admissions to pending
+    await Admission.findOneAndUpdate({ student: students[1]._id }, { status: 'pending', roomAssigned: null, feeGenerated: false })
+    await Admission.findOneAndUpdate({ student: students[2]._id }, { status: 'pending', roomAssigned: null, feeGenerated: false })
+
+    console.log('✓ Set Priyanshu Patel and Rohan Verma admissions to PENDING status to demonstrate workflow')
+
+    // Create system notification for all students
+    await Notification.insertMany(students.map(s => ({
+      recipient: s._id,
+      sender: admin._id,
+      title: 'Welcome to HMS! 🏠',
+      message: `Namaste ${s.name}, welcome to the new Hostel Management System. Please review your profile and pending dues.`,
+      type: 'announcement',
+      category: 'info'
+    })))
+    console.log('✓ Sent welcome notifications to all students')
 
     console.log('\n✅ Database seeded successfully!')
     console.log('\nDemo Accounts:')
     console.log('Admin: admin@hostel.com / admin123')
-    console.log('Student: john@hostel.com / student123')
-    console.log('\nAdmission Workflow:')
-    console.log('1. Student john is already approved with room allocated (101)')
-    console.log('2. Students jane and bob have pending admission requests')
-    console.log('3. Admin can approve/reject pending admissions at /admin/admissions')
-
+    console.log('Student Accounts (Password: student123):')
+    console.log('1. aarav@hostel.com     (Aarav Sharma - Approved, Room 101)')
+    console.log('2. priyanshu@hostel.com (Priyanshu Patel - Pending Admission)')
+    console.log('3. rohan@hostel.com     (Rohan Verma - Pending Admission)')
+    console.log('4. ananya@hostel.com    (Ananya Iyer - Approved, Room 201)')
+    
+    console.log('\nAdmission Workflow Demo:')
+    console.log('- Aarav and Ananya have approved status, rooms, and payments ready.')
+    console.log('- Priyanshu and Rohan have pending admission requests waiting for Admin review.')
+    
     await mongoose.connection.close()
   } catch (error) {
     console.error('✗ Error seeding database:', error)

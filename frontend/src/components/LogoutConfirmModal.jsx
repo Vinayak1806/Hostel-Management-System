@@ -3,7 +3,7 @@ import { AlertCircle } from 'lucide-react'
 
 export const LogoutConfirmModal = ({ isOpen, onConfirm, onCancel, isLoading = false }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onCancel} title="Confirm Logout">
+    <Modal isOpen={isOpen} onClose={onCancel} title="Confirm Logout" showCloseButton={false}>
       <div className="flex flex-col items-center gap-4 py-4">
         <AlertCircle className="w-12 h-12 text-yellow-600" />
         <div className="text-center">

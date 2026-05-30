@@ -89,7 +89,7 @@ export const Textarea = ({ label, error, ...props }) => {
   )
 }
 
-export const Modal = ({ isOpen, title, children, onClose, footer = null }) => {
+export const Modal = ({ isOpen, title, children, onClose, footer = null, showCloseButton = true }) => {
   if (!isOpen) return null
 
   return (
@@ -98,12 +98,16 @@ export const Modal = ({ isOpen, title, children, onClose, footer = null }) => {
       <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 max-w-md w-full mx-4 z-50">
         <h2 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">{title}</h2>
         <div className="mb-6">{children}</div>
-        <div className="flex justify-end space-x-3">
-          {footer}
-          <Button variant="secondary" onClick={onClose}>
-            Close
-          </Button>
-        </div>
+        {(footer || showCloseButton) && (
+          <div className="flex justify-end space-x-3">
+            {footer}
+            {showCloseButton && (
+              <Button variant="secondary" onClick={onClose}>
+                Close
+              </Button>
+            )}
+          </div>
+        )}
       </div>
     </>
   )
@@ -167,10 +171,10 @@ export const Alert = ({ type = 'info', message, onClose = null }) => {
   }
 
   return (
-    <div className={`p-4 rounded-lg border ${colors[type]} flex justify-between items-center`}>
-      <p>{message}</p>
+    <div className={`fixed top-4 right-4 z-[100] min-w-[320px] max-w-md p-4 rounded-xl border shadow-2xl animate-in slide-in-from-top-5 fade-in duration-300 ${colors[type]} flex justify-between items-start gap-4`}>
+      <p className="font-medium mt-0.5">{message}</p>
       {onClose && (
-        <button onClick={onClose} className="text-xl font-bold cursor-pointer">
+        <button onClick={onClose} className="text-xl font-bold cursor-pointer opacity-70 hover:opacity-100 transition-opacity">
           ×
         </button>
       )}

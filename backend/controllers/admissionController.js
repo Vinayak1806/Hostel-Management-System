@@ -2,11 +2,12 @@ import Admission from '../models/Admission.js'
 import User from '../models/User.js'
 import Room from '../models/Room.js'
 import Payment from '../models/Payment.js'
+import Notification from '../models/Notification.js'
 
 // Student submits admission request
 export const submitAdmissionRequest = async (req, res) => {
   try {
-    const { course, year, semester, address, parentPhone } = req.body
+    const { course, year, semester, address, parentPhone, collegeName, fatherName, motherName, bloodGroup } = req.body
     const studentId = req.user.id
 
     // Check if student already has a pending or approved admission
@@ -37,6 +38,10 @@ export const submitAdmissionRequest = async (req, res) => {
       year,
       semester,
       address,
+      collegeName,
+      fatherName,
+      motherName,
+      bloodGroup,
       phone: student.phone,
       parentPhone
     })
@@ -128,6 +133,19 @@ export const approveAdmission = async (req, res) => {
       await admission.save()
     }
 
+    // Create notification for student
+    await new Notification({
+      recipient: admission.student,
+      sender: adminId,
+      title: 'Hostel Admission Approved! 🎉',
+      message: `Congratulations! Your hostel admission request has been approved. Room ${room.roomNumber} has been allocated to you.`,
+      type: 'admission',
+      category: 'success',
+      relatedId: admission._id,
+      relatedModel: 'Admission',
+      actionUrl: '/admission'
+    }).save()
+
     res.json({
       message: 'Admission approved and room allocated successfully',
       admission,
@@ -157,6 +175,18 @@ export const rejectAdmission = async (req, res) => {
     admission.rejectedDate = new Date()
     await admission.save()
 
+    // Create notification for student
+    await new Notification({
+      recipient: admission.student,
+      title: 'Hostel Admission Rejected ❌',
+      message: `Your hostel admission request was rejected. Reason: ${reason}`,
+      type: 'admission',
+      category: 'error',
+      relatedId: admission._id,
+      relatedModel: 'Admission',
+      actionUrl: '/admission'
+    }).save()
+
     res.json({
       message: 'Admission rejected successfully',
       admission
@@ -172,6 +202,7 @@ export const getMyAdmissionStatus = async (req, res) => {
     const studentId = req.user.id
 
     const admission = await Admission.findOne({ student: studentId })
+      .sort({ createdAt: -1 })
       .populate('approvedBy', 'name email')
 
     if (!admission) {

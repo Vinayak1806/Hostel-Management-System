@@ -76,9 +76,12 @@ export const Sidebar = () => {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">HMS</h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400">Hostel Management</p>
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
+        <img src="/logo.jpeg" alt="Hostel Hub" className="w-10 h-10 rounded-full object-cover" />
+        <div>
+          <h2 className="text-xl font-bold text-blue-600 dark:text-blue-400">Hostel Hub</h2>
+          <p className="text-xs text-gray-500 dark:text-gray-400">Smart Hostel Management</p>
+        </div>
       </div>
 
       {/* Menu Items */}

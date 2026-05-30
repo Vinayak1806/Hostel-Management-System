@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services'
-import { Input, Button, Select, Alert } from '../components'
+import { Input, Button, Alert } from '../components'
 
 export default function SignupPage() {
   const [formData, setFormData] = useState({
@@ -11,13 +11,7 @@ export default function SignupPage() {
     phone: '',
     password: '',
     confirmPassword: '',
-    role: 'student',
-    rollNumber: '',
-    semester: '1',
-    course: '',
-    collegeName: '',
-    permanentAddress: '',
-    parentPhone: ''
+    role: 'student'
   })
 
   const [loading, setLoading] = useState(false)
@@ -50,13 +44,7 @@ export default function SignupPage() {
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
-        role: formData.role,
-        rollNumber: formData.rollNumber,
-        semester: formData.semester,
-        course: formData.course,
-        collegeName: formData.collegeName,
-        permanentAddress: formData.permanentAddress,
-        parentPhone: formData.parentPhone
+        role: formData.role
       })
 
       login(response.user, response.token)
@@ -95,7 +83,7 @@ export default function SignupPage() {
               </h1>
 
               <p className="text-sm text-gray-400 tracking-wide">
-                Join our hostel community and manage everything smarter.
+                Join Hostel Hub and manage everything smarter.
               </p>
             </div>
 
@@ -166,123 +154,6 @@ export default function SignupPage() {
                 />
               </div>
 
-              {/* Student Fields */}
-              {formData.role === 'student' && (
-                <>
-                  {/* Roll + Semester */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                        Roll Number
-                      </label>
-
-                      <Input
-                        type="text"
-                        name="rollNumber"
-                        placeholder="21CS001"
-                        value={formData.rollNumber}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                        Semester
-                      </label>
-
-                      <Select
-                        name="semester"
-                        value={formData.semester}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                        options={[
-                          { value: '1', label: '1st Semester' },
-                          { value: '2', label: '2nd Semester' },
-                          { value: '3', label: '3rd Semester' },
-                          { value: '4', label: '4th Semester' },
-                          { value: '5', label: '5th Semester' },
-                          { value: '6', label: '6th Semester' },
-                          { value: '7', label: '7th Semester' },
-                          { value: '8', label: '8th Semester' }
-                        ]}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Course + College */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                        Course
-                      </label>
-
-                      <Input
-                        type="text"
-                        name="course"
-                        placeholder="B.Tech / B.Sc"
-                        value={formData.course}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                        College Name
-                      </label>
-
-                      <Input
-                        type="text"
-                        name="collegeName"
-                        placeholder="College Name"
-                        value={formData.collegeName}
-                        onChange={handleChange}
-                        className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {/* Address */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                      Permanent Address
-                    </label>
-
-                    <Input
-                      type="text"
-                      name="permanentAddress"
-                      placeholder="Your permanent address"
-                      value={formData.permanentAddress}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                      required
-                    />
-                  </div>
-
-                  {/* Parent Phone */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-200 mb-2 tracking-wide">
-                      Parent Phone Number
-                    </label>
-
-                    <Input
-                      type="tel"
-                      name="parentPhone"
-                      placeholder="+91 98765 43210"
-                      value={formData.parentPhone}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 text-sm bg-white/10 border border-white/10 text-white rounded-2xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all duration-300"
-                      required
-                    />
-                  </div>
-                </>
-              )}
 
               {/* Passwords */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -349,24 +220,12 @@ export default function SignupPage() {
 
             <div className="relative z-10 text-center">
               
-              <div className="inline-block bg-white/10 backdrop-blur-lg rounded-full p-6 mb-6 border border-white/20 shadow-xl">
-                <svg
-                  className="w-14 h-14"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
+              <div className="inline-block bg-white/10 backdrop-blur-lg rounded-full p-2 mb-6 border border-white/20 shadow-xl overflow-hidden">
+                <img src="/logo.jpeg" alt="Hostel Hub" className="w-20 h-20 rounded-full object-cover" />
               </div>
 
               <h2 className="text-4xl font-extrabold mb-4 tracking-tight">
-                Welcome to HMS
+                Welcome to Hostel Hub
               </h2>
 
               <p className="text-lg mb-8 text-blue-100 leading-relaxed">

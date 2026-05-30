@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Calendar, LogIn, LogOut, Clock, BarChart3, AlertCircle, CheckCircle } from 'lucide-react'
+import { Calendar, Clock, BarChart3, AlertCircle, CheckCircle } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
 import { Navbar, Card } from '../components'
 import { attendanceAPI } from '../services'
@@ -55,23 +55,7 @@ export default function AttendanceTracker() {
     }
   }
 
-  const handleCheckIn = async () => {
-    try {
-      await attendanceAPI.checkIn()
-      fetchAttendance()
-    } catch (err) {
-      setError(err.message || 'Check-in failed')
-    }
-  }
 
-  const handleCheckOut = async () => {
-    try {
-      await attendanceAPI.checkOut()
-      fetchAttendance()
-    } catch (err) {
-      setError(err.message || 'Check-out failed')
-    }
-  }
 
   const formatTime = (date) => {
     return new Date(date).toLocaleTimeString('en-IN', {
@@ -136,37 +120,6 @@ export default function AttendanceTracker() {
             {error}
           </div>
         )}
-
-        {/* Quick Check-In/Check-Out */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-700 dark:to-green-800 p-6 text-white rounded-xl border-0 cursor-pointer hover:shadow-lg transition"
-            onClick={handleCheckIn}
-          >
-            <div className="flex items-center gap-3">
-              <LogIn className="w-8 h-8" />
-              <div className="text-left">
-                <p className="text-sm opacity-90">Check In</p>
-                <p className="text-2xl font-bold">
-                  {todayStatus?.checkInTime ? formatTime(todayStatus.checkInTime) : 'Not checked in'}
-                </p>
-              </div>
-            </div>
-          </Card>
-
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-700 dark:to-blue-800 p-6 text-white rounded-xl border-0 cursor-pointer hover:shadow-lg transition"
-            onClick={handleCheckOut}
-          >
-            <div className="flex items-center gap-3">
-              <LogOut className="w-8 h-8" />
-              <div className="text-left">
-                <p className="text-sm opacity-90">Check Out</p>
-                <p className="text-2xl font-bold">
-                  {todayStatus?.checkOutTime ? formatTime(todayStatus.checkOutTime) : 'Not checked out'}
-                </p>
-              </div>
-            </div>
-          </Card>
-        </div>
 
         {/* Summary Stats */}
         {summary && (

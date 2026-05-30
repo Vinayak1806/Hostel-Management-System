@@ -31,6 +31,18 @@ const admissionSchema = new mongoose.Schema(
       type: String,
       required: true
     },
+    collegeName: {
+      type: String
+    },
+    fatherName: {
+      type: String
+    },
+    motherName: {
+      type: String
+    },
+    bloodGroup: {
+      type: String
+    },
     phone: {
       type: String,
       required: true
