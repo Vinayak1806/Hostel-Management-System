@@ -1,5 +1,7 @@
 import Room from '../models/Room.js'
 import User from '../models/User.js'
+import Notification from '../models/Notification.js'
+import { sendEmail, emailTemplates } from '../utils/emailService.js'
 
 export const getAllRooms = async (req, res) => {
   try {
@@ -103,7 +105,25 @@ export const allocateStudent = async (req, res) => {
     await room.save()
 
     // Update student's room number
-    await User.findByIdAndUpdate(studentId, { roomNumber: room.roomNumber })
+    const studentUser = await User.findByIdAndUpdate(studentId, { roomNumber: room.roomNumber }, { new: true })
+
+    // Send system notification
+    new Notification({
+      recipient: studentId,
+      title: 'Room Allocated',
+      message: `You have been allocated Room ${room.roomNumber} on floor ${room.floor}.`,
+      type: 'general',
+      category: 'success'
+    }).save()
+
+    // Send email
+    if (studentUser && studentUser.email) {
+      await sendEmail({
+        to: studentUser.email,
+        subject: 'Room Allocated',
+        html: emailTemplates.roomAllocation(studentUser.name, room.roomNumber, room.floor)
+      })
+    }
 
     res.json(room)
   } catch (error) {

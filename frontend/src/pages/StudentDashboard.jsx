@@ -3,19 +3,65 @@ import { Link } from 'react-router-dom'
 import { Sidebar } from '../components/Sidebar'
 import { Navbar, Card, Button, Alert } from '../components'
 import { useAuth } from '../context/AuthContext'
-import { User, Bed, DollarSign, FileText, Bell, AlertCircle, Clock, Check } from 'lucide-react'
+import { User, Bed, DollarSign, FileText, Bell, AlertCircle, Clock, CalendarCheck } from 'lucide-react'
+import { paymentAPI, noticeAPI, attendanceAPI } from '../services'
 
 export default function StudentDashboard() {
   const { user } = useAuth()
-  const [feeStatus, setFeeStatus] = useState({ amount: 5000, paid: 0, due: 5000, dueDate: '2026-06-30' })
-  const [recentNotices, setRecentNotices] = useState([
-    { id: 1, title: 'Admission Portal Open', date: '2026-05-29' },
-    { id: 2, title: 'Sports Day - June 15', date: '2026-05-28' },
-    { id: 3, title: 'Fee Submission Deadline', date: '2026-05-25' }
-  ])
+  const [feeStatus, setFeeStatus] = useState({ amount: 0, paid: 0, due: 0, dueDate: '-' })
+  const [attendance, setAttendance] = useState(null)
+  const [recentNotices, setRecentNotices] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const fetchDashboardData = async () => {
+      try {
+        setLoading(true)
+        const [paymentRes, noticeRes, attendanceRes] = await Promise.all([
+          paymentAPI.getStudentPayments().catch(() => ({ summary: { totalAmount: 0, paidAmount: 0, pendingAmount: 0 }, payments: [] })),
+          noticeAPI.getAll().catch(() => ([])),
+          attendanceAPI.getStudentAttendance().catch(() => null)
+        ])
+        
+        const summary = paymentRes.summary || { totalAmount: 0, paidAmount: 0, pendingAmount: 0 }
+        const payments = paymentRes.payments || []
+        
+        const pendingPayments = payments.filter(p => p.status === 'pending').sort((a, b) => new Date(a.dueDate) - new Date(b.dueDate))
+        const nextDueDate = pendingPayments.length > 0 ? new Date(pendingPayments[0].dueDate).toLocaleDateString() : '-'
+
+        setFeeStatus({
+          amount: summary.totalAmount,
+          paid: summary.paidAmount,
+          due: summary.pendingAmount,
+          dueDate: nextDueDate
+        })
+        
+        if (Array.isArray(noticeRes)) {
+            setRecentNotices(noticeRes.slice(0, 3).map(n => ({
+                id: n._id,
+                title: n.title,
+                date: new Date(n.createdAt).toLocaleDateString()
+            })))
+        }
+
+        if (attendanceRes && attendanceRes.summary) {
+          const { totalDays, present, late } = attendanceRes.summary
+          const attendancePercentage = totalDays > 0 ? Math.round(((present + late) / totalDays) * 100) : 0
+          setAttendance(attendancePercentage)
+        } else {
+          setAttendance(0)
+        }
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDashboardData()
+  }, [])
 
   const roomNumber = user?.roomNumber || null
-  const occupancyPercentage = roomNumber ? 75 : 0
+  const occupancyPercentage = roomNumber ? 100 : 0
 
   return (
     <div className="flex">
@@ -24,6 +70,11 @@ export default function StudentDashboard() {
         <Navbar title="My Dashboard" />
 
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+          {loading && (
+             <div className="flex items-center justify-center h-full mb-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+             </div>
+          )}
           {/* Welcome Banner */}
           <Card className="mb-8 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-800 dark:to-blue-900 text-white rounded-xl p-8">
             <div className="flex justify-between items-start">
@@ -81,16 +132,23 @@ export default function StudentDashboard() {
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Semester: {user?.semester || 'N/A'}</p>
             </Card>
 
-            {/* Status Overview Card */}
+            {/* Attendance Overview Card */}
             <Card className="p-6 rounded-xl border border-gray-200 dark:border-gray-700">
               <div className="flex items-start justify-between mb-4">
                 <div className="p-3 bg-indigo-100 dark:bg-indigo-900/30 rounded-lg">
-                  <Check className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+                  <CalendarCheck className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
                 </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                  (attendance || 0) >= 75
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}>
+                  {(attendance || 0) >= 75 ? 'Good' : 'Warning'}
+                </span>
               </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Account Status</p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-white">Active</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Member since May 2026</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Attendance</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{attendance !== null ? attendance + '%' : 'N/A'}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">Target: 75%</p>
             </Card>
           </div>
 
@@ -192,7 +250,9 @@ export default function StudentDashboard() {
                       Due Date: <strong>{feeStatus.dueDate}</strong>
                     </div>
                   </div>
-                  <Button variant="primary" className="w-full mt-2">Pay Now</Button>
+                  <Link to="/payments">
+                    <Button variant="primary" className="w-full mt-2">Pay Now</Button>
+                  </Link>
                 </div>
               </Card>
             </div>
@@ -206,12 +266,16 @@ export default function StudentDashboard() {
                   Recent Notices
                 </h2>
                 <div className="space-y-3">
-                  {recentNotices.map((notice) => (
-                    <div key={notice.id} className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer border-l-4 border-blue-600">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white">{notice.title}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notice.date}</p>
-                    </div>
-                  ))}
+                  {recentNotices.length > 0 ? (
+                    recentNotices.map((notice) => (
+                      <div key={notice.id} className="p-3 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-colors cursor-pointer border-l-4 border-blue-600 bg-white dark:bg-gray-800 shadow-sm">
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{notice.title}</p>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{notice.date}</p>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400 p-3">No recent notices</p>
+                  )}
                 </div>
                 <Link to="/notices" className="block mt-4">
                   <Button variant="secondary" className="w-full">View All Notices</Button>

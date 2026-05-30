@@ -7,11 +7,13 @@ import connectDB from './config/database.js'
 import authRoutes from './routes/authRoutes.js'
 import studentRoutes from './routes/studentRoutes.js'
 import roomRoutes from './routes/roomRoutes.js'
-import feeRoutes from './routes/feeRoutes.js'
 import complaintRoutes from './routes/complaintRoutes.js'
 import noticeRoutes from './routes/noticeRoutes.js'
 import analyticsRoutes from './routes/analyticsRoutes.js'
 import admissionRoutes from './routes/admissionRoutes.js'
+import paymentRoutes from './routes/paymentRoutes.js'
+import attendanceRoutes from './routes/attendanceRoutes.js'
+import notificationRoutes from './routes/notificationRoutes.js'
 
 // Load environment variables
 dotenv.config()
@@ -21,7 +23,7 @@ const PORT = process.env.PORT || 5000
 
 // Middleware
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: true,
   credentials: true
 }))
 app.use(express.json())
@@ -39,11 +41,13 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes)
 app.use('/api/students', studentRoutes)
 app.use('/api/rooms', roomRoutes)
-app.use('/api/fees', feeRoutes)
 app.use('/api/complaints', complaintRoutes)
 app.use('/api/notices', noticeRoutes)
 app.use('/api/analytics', analyticsRoutes)
 app.use('/api/admissions', admissionRoutes)
+app.use('/api/payments', paymentRoutes)
+app.use('/api/attendance', attendanceRoutes)
+app.use('/api/notifications', notificationRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

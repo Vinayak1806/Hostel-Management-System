@@ -1,10 +1,11 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { 
-  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X, FileText
+  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X, FileText, CreditCard, Calendar, Bell
 } from 'lucide-react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { LogoutConfirmModal } from './LogoutConfirmModal'
+import { paymentAPI } from '../services'
 
 export const Sidebar = () => {
   const { isAdmin, logout } = useAuth()
@@ -37,21 +38,40 @@ export const Sidebar = () => {
     { path: '/admin/admissions', label: 'Admissions', icon: FileText },
     { path: '/admin/students', label: 'Students', icon: Users },
     { path: '/admin/rooms', label: 'Rooms', icon: Bed },
-    { path: '/admin/fees', label: 'Fees', icon: DollarSign },
+    { path: '/admin/payments', label: 'Payments', icon: CreditCard },
+    { path: '/admin/attendance', label: 'Attendance', icon: Calendar },
     { path: '/admin/complaints', label: 'Complaints', icon: AlertCircle },
-    { path: '/admin/notices', label: 'Notices', icon: Clipboard }
+    { path: '/admin/notices', label: 'Notices', icon: Clipboard },
+    { path: '/admin/notifications', label: 'Notifications', icon: Bell }
   ]
 
   const studentMenuItems = [
     { path: '/dashboard', label: 'Dashboard', icon: Home },
     { path: '/admission', label: 'Admission', icon: FileText },
+    { path: '/payments', label: 'Payments', icon: CreditCard, badge: 'pendingPayments' },
+    { path: '/attendance', label: 'Attendance', icon: Calendar },
     { path: '/complaints', label: 'Complaints', icon: AlertCircle },
-    { path: '/notices', label: 'Notices', icon: Clipboard }
+    { path: '/notices', label: 'Notices', icon: Clipboard },
+    { path: '/notifications', label: 'Notifications', icon: Bell }
   ]
 
   const menuItems = isAdmin ? adminMenuItems : studentMenuItems
 
   const isActive = (path) => location.pathname === path
+
+  const [pendingPaymentsCount, setPendingPaymentsCount] = useState(0)
+
+  // Fetch pending payments for student to display in sidebar badge
+  useEffect(() => {
+    if (!isAdmin) {
+      paymentAPI.getStudentPayments()
+        .then(res => {
+          const count = res.summary?.pendingPayments || 0
+          setPendingPaymentsCount(count)
+        })
+        .catch(console.error)
+    }
+  }, [isAdmin])
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
@@ -70,14 +90,21 @@ export const Sidebar = () => {
               key={item.path}
               to={item.path}
               onClick={() => setIsOpen(false)}
-              className={`flex items-center space-x-3 px-4 py-2 rounded-lg transition-all ${
+              className={`flex items-center px-4 py-2 rounded-lg transition-all ${
                 isActive(item.path)
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
               }`}
             >
-              <Icon size={20} />
-              <span>{item.label}</span>
+              <div className="flex items-center space-x-3 flex-1">
+                <Icon size={20} />
+                <span>{item.label}</span>
+              </div>
+              {item.badge === 'pendingPayments' && pendingPaymentsCount > 0 && (
+                <span className="bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                  {pendingPaymentsCount}
+                </span>
+              )}
             </Link>
           )
         })}

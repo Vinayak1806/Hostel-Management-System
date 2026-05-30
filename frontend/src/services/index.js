@@ -26,18 +26,11 @@ export const roomAPI = {
   allocateStudent: (roomId, studentId) => apiClient.post(`/rooms/${roomId}/allocate`, { studentId })
 }
 
-// Fee endpoints
-export const feeAPI = {
-  getAll: (params) => apiClient.get('/fees', { params }),
-  getById: (id) => apiClient.get(`/fees/${id}`),
-  create: (data) => apiClient.post('/fees', data),
-  update: (id, data) => apiClient.put(`/fees/${id}`, data),
-  markPaid: (id) => apiClient.patch(`/fees/${id}/mark-paid`)
-}
 
 // Complaint endpoints
 export const complaintAPI = {
   getAll: (params) => apiClient.get('/complaints', { params }),
+  getStudentComplaints: () => apiClient.get('/complaints/student/my-complaints'),
   getById: (id) => apiClient.get(`/complaints/${id}`),
   create: (data) => apiClient.post('/complaints', data),
   updateStatus: (id, status) => apiClient.patch(`/complaints/${id}/status`, { status }),
@@ -65,4 +58,37 @@ export const admissionAPI = {
   reject: (admissionId, reason) => apiClient.post('/admissions/reject', { admissionId, reason }),
   getAll: (status) => apiClient.get('/admissions/all', { params: { status } }),
   getStats: () => apiClient.get('/admissions/stats')
+}
+
+// Payment endpoints
+export const paymentAPI = {
+  getStudentPayments: () => apiClient.get('/payments/student'),
+  getAllPayments: (params) => apiClient.get('/payments', { params }),
+  createPayment: (data) => apiClient.post('/payments', data),
+  updatePaymentStatus: (paymentId, data) => apiClient.put(`/payments/${paymentId}`, data),
+  processPayment: (paymentId) => apiClient.post(`/payments/process/${paymentId}`),
+  generateInvoice: (paymentId) => apiClient.get(`/payments/invoice/${paymentId}`),
+  deletePayment: (paymentId) => apiClient.delete(`/payments/${paymentId}`)
+}
+
+// Attendance endpoints
+export const attendanceAPI = {
+  checkIn: () => apiClient.post('/attendance/check-in'),
+  checkOut: () => apiClient.post('/attendance/check-out'),
+  getStudentAttendance: (params) => apiClient.get('/attendance/student', { params }),
+  getAllAttendance: (params) => apiClient.get('/attendance', { params }),
+  markAttendance: (userId, data) => apiClient.post(`/attendance/mark/${userId}`, data),
+  requestLeave: (data) => apiClient.post('/attendance/leave-request', data)
+}
+
+// Notification endpoints
+export const notificationAPI = {
+  getNotifications: (params) => apiClient.get('/notifications', { params }),
+  getStats: () => apiClient.get('/notifications/stats'),
+  markAsRead: (notificationId) => apiClient.put(`/notifications/${notificationId}/read`),
+  markAllAsRead: () => apiClient.put('/notifications/read-all'),
+  deleteNotification: (notificationId) => apiClient.delete(`/notifications/${notificationId}`),
+  clearAll: () => apiClient.delete('/notifications/clear-all'),
+  sendNotification: (userId, data) => apiClient.post(`/notifications/send/${userId}`, data),
+  sendBulkNotifications: (data) => apiClient.post('/notifications/bulk', data)
 }

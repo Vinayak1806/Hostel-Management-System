@@ -62,7 +62,7 @@ export default function SignupPage() {
       login(response.user, response.token)
       navigate('/dashboard')
     } catch (err) {
-      setError(err.message || 'Signup failed. Please try again.')
+      setError(err?.message || (typeof err === 'string' ? err : 'Signup failed. Please try again.'))
     } finally {
       setLoading(false)
     }

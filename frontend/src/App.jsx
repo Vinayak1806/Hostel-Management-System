@@ -10,11 +10,16 @@ import AdminDashboard from './pages/AdminDashboard'
 import StudentDashboard from './pages/StudentDashboard'
 import StudentManagement from './pages/StudentManagement'
 import RoomManagement from './pages/RoomManagement'
-import FeeManagement from './pages/FeeManagement'
 import ComplaintManagement from './pages/ComplaintManagement'
 import NoticeBoard from './pages/NoticeBoard'
 import AdmissionPage from './pages/AdmissionPage'
 import AdmissionManagement from './pages/AdmissionManagement'
+import PaymentDashboard from './pages/PaymentDashboard'
+import AttendanceTracker from './pages/AttendanceTracker'
+import NotificationCenter from './pages/NotificationCenter'
+import AdminPaymentDashboard from './pages/AdminPaymentDashboard'
+import AdminAttendancePanel from './pages/AdminAttendancePanel'
+import AdminNotificationPanel from './pages/AdminNotificationPanel'
 import NotFound from './pages/NotFound'
 
 // Protected Route Component
@@ -64,14 +69,6 @@ function AppRoutes() {
         element={
           <ProtectedRoute requiredRole="admin">
             <RoomManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/fees"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <FeeManagement />
           </ProtectedRoute>
         }
       />
@@ -130,6 +127,56 @@ function AppRoutes() {
         element={
           <ProtectedRoute>
             <NoticeBoard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/payments"
+        element={
+          <ProtectedRoute>
+            <PaymentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/attendance"
+        element={
+          <ProtectedRoute>
+            <AttendanceTracker />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <NotificationCenter />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Admin Advanced Features Routes */}
+      <Route
+        path="/admin/payments"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminPaymentDashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/attendance"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminAttendancePanel />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/admin/notifications"
+        element={
+          <ProtectedRoute requiredRole="admin">
+            <AdminNotificationPanel />
           </ProtectedRoute>
         }
       />

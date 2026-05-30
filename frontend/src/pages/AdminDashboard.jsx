@@ -57,22 +57,22 @@ export default function AdminDashboard() {
                   color="bg-blue-600"
                 />
                 <StatCard
-                  icon={Bed}
-                  label="Total Rooms"
-                  value={analytics?.totalRooms || 0}
+                  icon={DollarSign}
+                  label="Total Revenue"
+                  value={`₹${analytics?.totalRevenue || 0}`}
                   color="bg-green-600"
                 />
                 <StatCard
-                  icon={DollarSign}
+                  icon={AlertCircle}
                   label="Pending Fees"
                   value={`₹${analytics?.pendingFees || 0}`}
                   color="bg-yellow-600"
                 />
                 <StatCard
-                  icon={AlertCircle}
-                  label="Open Complaints"
-                  value={analytics?.openComplaints || 0}
-                  color="bg-red-600"
+                  icon={Bed}
+                  label="Room Occupancy"
+                  value={`${analytics?.occupancyPercentage || 0}%`}
+                  color="bg-purple-600"
                 />
               </div>
 
@@ -120,25 +120,50 @@ export default function AdminDashboard() {
               </div>
 
               {/* Recent Activity */}
-              <Card className="mt-6">
-                <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
-                  Quick Actions
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <button className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors text-left">
-                    <p className="font-semibold text-blue-600 dark:text-blue-400">Add Student</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Register new student</p>
-                  </button>
-                  <button className="p-4 bg-green-50 dark:bg-green-900/20 rounded-lg hover:bg-green-100 dark:hover:bg-green-900/30 transition-colors text-left">
-                    <p className="font-semibold text-green-600 dark:text-green-400">Allocate Room</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Assign student to room</p>
-                  </button>
-                  <button className="p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg hover:bg-purple-100 dark:hover:bg-purple-900/30 transition-colors text-left">
-                    <p className="font-semibold text-purple-600 dark:text-purple-400">Post Notice</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Create announcement</p>
-                  </button>
-                </div>
-              </Card>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+                <Card>
+                  <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+                    Recent Payments
+                  </h2>
+                  <div className="space-y-4">
+                    {analytics?.recentPayments?.length > 0 ? (
+                      analytics.recentPayments.map((payment, idx) => (
+                        <div key={idx} className="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                          <div>
+                            <p className="font-semibold text-gray-900 dark:text-white">{payment.student?.name || 'Unknown'}</p>
+                            <p className="text-sm text-gray-500">{new Date(payment.createdAt).toLocaleDateString()}</p>
+                          </div>
+                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                            payment.status === 'completed' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
+                          }`}>
+                            ₹{payment.amount}
+                          </span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">No recent payments.</p>
+                    )}
+                  </div>
+                </Card>
+
+                <Card>
+                  <h2 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">
+                    Recent System Notifications
+                  </h2>
+                  <div className="space-y-4">
+                    {analytics?.recentNotifications?.length > 0 ? (
+                      analytics.recentNotifications.map((notif, idx) => (
+                        <div key={idx} className="p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border-l-4 border-blue-600">
+                          <p className="font-semibold text-gray-900 dark:text-white">{notif.title}</p>
+                          <p className="text-sm text-gray-500 truncate">{notif.message}</p>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-sm text-gray-500">No recent notifications.</p>
+                    )}
+                  </div>
+                </Card>
+              </div>
             </>
           )}
         </main>

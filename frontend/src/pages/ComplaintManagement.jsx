@@ -23,7 +23,15 @@ export default function ComplaintManagement() {
 
   const fetchComplaints = async () => {
     try {
-      const data = await complaintAPI.getAll()
+      let data
+      if (isAdmin) {
+        data = await complaintAPI.getAll()
+        // Map student name from populated field for admin view
+        data = data.map(c => ({ ...c, studentName: c.student?.name || 'Unknown' }))
+      } else {
+        data = await complaintAPI.getStudentComplaints()
+        data = data.map(c => ({ ...c, studentName: user?.name || 'Me' }))
+      }
       setComplaints(data)
     } catch (err) {
       setError('Failed to load complaints')

@@ -1,4 +1,6 @@
 import Complaint from '../models/Complaint.js'
+import Notification from '../models/Notification.js'
+import { sendEmail, emailTemplates } from '../utils/emailService.js'
 
 export const getAllComplaints = async (req, res) => {
   try {
@@ -62,6 +64,27 @@ export const updateComplaintStatus = async (req, res) => {
 
     if (!complaint) {
       return res.status(404).json({ message: 'Complaint not found' })
+    }
+
+    // Send system notification
+    new Notification({
+      recipient: complaint.student._id,
+      title: 'Complaint Updated',
+      message: `Your complaint "${complaint.title}" is now ${status}.`,
+      type: 'complaint',
+      category: status === 'resolved' ? 'success' : 'info',
+      relatedId: complaint._id,
+      relatedModel: 'Complaint',
+      actionUrl: '/dashboard/complaints'
+    }).save()
+
+    // Send email
+    if (complaint.student.email) {
+      await sendEmail({
+        to: complaint.student.email,
+        subject: 'Complaint Status Update',
+        html: emailTemplates.complaintUpdate(complaint.student.name, complaint.title, status)
+      })
     }
 
     res.json(complaint)

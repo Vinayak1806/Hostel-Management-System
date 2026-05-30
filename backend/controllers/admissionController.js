@@ -1,7 +1,7 @@
 import Admission from '../models/Admission.js'
 import User from '../models/User.js'
 import Room from '../models/Room.js'
-import Fee from '../models/Fee.js'
+import Payment from '../models/Payment.js'
 
 // Student submits admission request
 export const submitAdmissionRequest = async (req, res) => {
@@ -115,14 +115,13 @@ export const approveAdmission = async (req, res) => {
       const today = new Date()
       const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate())
 
-      await Fee.create({
+      await Payment.create({
         student: admission.student,
-        studentName: student.name,
-        studentRoll: student.rollNumber,
         amount: 5000,
         dueDate: nextMonth,
-        status: 'unpaid',
-        description: `Hostel Fee - ${today.toLocaleString('default', { month: 'long', year: 'numeric' })}`
+        status: 'pending',
+        description: `Hostel Fee - ${today.toLocaleString('default', { month: 'long', year: 'numeric' })}`,
+        paymentMethod: 'razorpay'
       })
 
       admission.feeGenerated = true

@@ -38,7 +38,7 @@ export default function LoginPage() {
       login(response.user, response.token)
       navigate(response.user.role === 'admin' ? '/admin' : '/dashboard')
     } catch (err) {
-      setError(err.message || 'Login failed')
+      setError(err?.message || (typeof err === 'string' ? err : 'Login failed'))
     } finally {
       setLoading(false)
     }
