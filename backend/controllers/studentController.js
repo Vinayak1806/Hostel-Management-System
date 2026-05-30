@@ -52,10 +52,10 @@ export const createStudent = async (req, res) => {
 
 export const updateStudent = async (req, res) => {
   try {
-    const { name, phone, semester } = req.body
+    const { name, phone, semester, rollNumber, email } = req.body
     const student = await User.findByIdAndUpdate(
       req.params.id,
-      { name, phone, semester },
+      { name, phone, semester, rollNumber, email },
       { new: true }
     ).select('-password')
 

@@ -101,10 +101,16 @@ export const approveAdmission = async (req, res) => {
     room.updateStatus()
     await room.save()
 
-    // Update student with room number and mark as active
+    // Update student with room number, academic info, and mark as active
     const student = await User.findByIdAndUpdate(
       admission.student,
-      { roomNumber: room.roomNumber, isActive: true },
+      { 
+        roomNumber: room.roomNumber, 
+        isActive: true,
+        rollNumber: admission.rollNumber,
+        semester: admission.semester,
+        course: admission.course
+      },
       { new: true }
     )
 

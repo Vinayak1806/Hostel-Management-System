@@ -287,7 +287,12 @@ export default function AdminAttendancePanel() {
                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
                           {new Date(record.date).toLocaleDateString()}
                         </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">{record.student?.name || 'N/A'}</td>
+                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
+                          {record.student?.name || 'N/A'}
+                          {record.student?.rollNumber && (
+                            <span className="block text-xs text-gray-500 mt-1">ID: {record.student.rollNumber}</span>
+                          )}
+                        </td>
                         <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
                           {record.checkInTime
                             ? new Date(record.checkInTime).toLocaleTimeString('en-IN', {
