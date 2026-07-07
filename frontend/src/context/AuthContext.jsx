@@ -26,6 +26,11 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('user', JSON.stringify(userData))
   }
 
+  const updateUser = (updatedUserData) => {
+    setUser(updatedUserData)
+    localStorage.setItem('user', JSON.stringify(updatedUserData))
+  }
+
   const logout = () => {
     setUser(null)
     setToken(null)
@@ -43,6 +48,7 @@ export const AuthProvider = ({ children }) => {
       loading,
       login,
       logout,
+      updateUser,
       isAuthenticated,
       isAdmin
     }}>

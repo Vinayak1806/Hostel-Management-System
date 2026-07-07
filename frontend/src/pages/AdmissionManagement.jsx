@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { FileText, CheckCircle, AlertCircle, Clock, Ban, Percent, Heart, User, MapPin, Phone } from 'lucide-react'
-import { Navbar, Sidebar, Card, Button, Table, Modal, Select, Textarea, Alert } from '../components'
+import { Navbar, Sidebar, Card, Button, Table, Modal, Select, Textarea, Alert, Badge } from '../components'
 import { admissionAPI, roomAPI } from '../services'
 
 export default function AdmissionManagement() {
@@ -113,17 +113,7 @@ export default function AdmissionManagement() {
     {
       key: 'status',
       label: 'Status',
-      render: (value) => (
-        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-          value === 'pending'
-            ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-            : value === 'approved'
-            ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-            : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-        }`}>
-          {value.charAt(0).toUpperCase() + value.slice(1)}
-        </span>
-      )
+      render: (value) => <Badge status={value} />
     }
   ]
 
@@ -147,11 +137,11 @@ export default function AdmissionManagement() {
           </Button>
         </>
       ) : admission.status === 'approved' ? (
-        <div className="text-xs font-semibold text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/10 px-2 py-1 rounded">
+        <div className="text-xs font-semibold text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-200 dark:border-emerald-800/50 px-2 py-1 rounded-lg">
           Allocated: Room {admission.roomAssigned}
         </div>
       ) : (
-        <div className="text-xs font-semibold text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/10 px-2 py-1 rounded max-w-xs truncate" title={admission.rejectionReason}>
+        <div className="text-xs font-semibold text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-900/30 border border-rose-200 dark:border-rose-800/50 px-2 py-1 rounded-lg max-w-xs truncate" title={admission.rejectionReason}>
           Reason: {admission.rejectionReason}
         </div>
       )}

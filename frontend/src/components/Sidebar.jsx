@@ -1,7 +1,8 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { 
-  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X, FileText, CreditCard, Calendar, Bell
+import { useTheme } from '../context/ThemeContext'
+import {
+  Home, Users, Bed, DollarSign, AlertCircle, Clipboard, LogOut, Menu, X, FileText, CreditCard, Calendar, Bell, Sun, Moon, User
 } from 'lucide-react'
 import { useState, useEffect } from 'react'
 import { LogoutConfirmModal } from './LogoutConfirmModal'
@@ -9,6 +10,7 @@ import { paymentAPI } from '../services'
 
 export const Sidebar = () => {
   const { isAdmin, logout } = useAuth()
+  const { isDarkMode, toggleTheme } = useTheme()
   const location = useLocation()
   const navigate = useNavigate()
   const [isOpen, setIsOpen] = useState(false)
@@ -52,7 +54,8 @@ export const Sidebar = () => {
     { path: '/attendance', label: 'Attendance', icon: Calendar },
     { path: '/complaints', label: 'Complaints', icon: AlertCircle },
     { path: '/notices', label: 'Notices', icon: Clipboard },
-    { path: '/notifications', label: 'Notifications', icon: Bell }
+    { path: '/notifications', label: 'Notifications', icon: Bell },
+    { path: '/profile', label: 'Profile', icon: User }
   ]
 
   const menuItems = isAdmin ? adminMenuItems : studentMenuItems
@@ -113,21 +116,32 @@ export const Sidebar = () => {
         })}
       </nav>
 
-      {/* Logout */}
-      <button
-        onClick={handleLogoutClick}
-        className="m-4 flex items-center space-x-3 w-full px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-      >
-        <LogOut size={20} />
-        <span>Logout</span>
-      </button>
+      <div className="mt-auto px-4 pb-2">
+        {/* Theme Toggle */}
+        <button
+          onClick={toggleTheme}
+          className="flex items-center space-x-3 w-full px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all mb-2"
+        >
+          {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+          <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+        </button>
+
+        {/* Logout */}
+        <button
+          onClick={handleLogoutClick}
+          className="flex items-center space-x-3 w-full px-4 py-2 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+        >
+          <LogOut size={20} />
+          <span>Logout</span>
+        </button>
+      </div>
     </div>
   )
 
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:flex-col md:w-64 bg-white dark:bg-gray-800 shadow-md border-r border-gray-200 dark:border-gray-700 h-screen fixed left-0 top-0">
+      <aside className="hidden md:flex md:flex-col md:w-64 bg-white dark:bg-gray-800 shadow-md border-r border-gray-200 dark:border-gray-700 h-screen fixed left-0 top-0 z-50">
         <SidebarContent />
       </aside>
 
@@ -135,7 +149,7 @@ export const Sidebar = () => {
       <div className="md:hidden">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="fixed bottom-6 right-6 z-40 p-3 bg-blue-600 text-white rounded-full shadow-lg"
+          className="fixed bottom-6 left-6 z-40 p-3 bg-blue-600 text-white rounded-full shadow-lg"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>

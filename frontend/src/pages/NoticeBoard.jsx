@@ -3,7 +3,7 @@ import { Sidebar } from '../components/Sidebar'
 import { Navbar, Card, Button, Input, Textarea, Alert } from '../components'
 import { noticeAPI } from '../services'
 import { useAuth } from '../context/AuthContext'
-import { Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2, Megaphone, Calendar, Wrench, BookOpen } from 'lucide-react'
 
 export default function NoticeBoard() {
   const { isAdmin } = useAuth()
@@ -64,12 +64,22 @@ export default function NoticeBoard() {
 
   const getCategoryColor = (category) => {
     const colors = {
-      'general': 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
-      'event': 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
-      'maintenance': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
-      'rules': 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+      'general': 'bg-blue-50 text-blue-700 border border-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:border-blue-800/50',
+      'event': 'bg-violet-50 text-violet-700 border border-violet-200 dark:bg-violet-900/30 dark:text-violet-300 dark:border-violet-800/50',
+      'maintenance': 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-900/30 dark:text-amber-300 dark:border-amber-800/50',
+      'rules': 'bg-rose-50 text-rose-700 border border-rose-200 dark:bg-rose-900/30 dark:text-rose-300 dark:border-rose-800/50'
     }
     return colors[category] || colors['general']
+  }
+
+  const getCategoryIcon = (category) => {
+    const icons = {
+      'general': <Megaphone size={14} />,
+      'event': <Calendar size={14} />,
+      'maintenance': <Wrench size={14} />,
+      'rules': <BookOpen size={14} />
+    }
+    return icons[category] || icons['general']
   }
 
   return (
@@ -78,21 +88,25 @@ export default function NoticeBoard() {
       <div className="flex-1 md:ml-64">
         <Navbar title="Notice Board" />
 
-        <main className="container py-8">
+        <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-          {isAdmin && (
-            <div className="mb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Notice Board</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{notices.length} notices posted</p>
+            </div>
+            {isAdmin && (
               <Button
                 variant="primary"
                 onClick={() => setShowForm(!showForm)}
-                className="flex items-center space-x-2"
+                className="flex items-center gap-2 rounded-xl px-5"
               >
                 <Plus size={18} />
                 <span>{showForm ? 'Cancel' : 'Post Notice'}</span>
               </Button>
-            </div>
-          )}
+            )}
+          </div>
 
           {showForm && isAdmin && (
             <Card className="mb-6">
@@ -111,7 +125,7 @@ export default function NoticeBoard() {
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
-                  className="input"
+                  className="w-full px-4 py-3 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white transition-shadow"
                 >
                   <option value="general">General</option>
                   <option value="event">Event</option>
@@ -126,7 +140,7 @@ export default function NoticeBoard() {
                   onChange={handleChange}
                   required
                 />
-                <div className="flex space-x-3">
+                <div className="flex gap-3">
                   <Button variant="primary" type="submit">
                     Post Notice
                   </Button>
@@ -140,31 +154,38 @@ export default function NoticeBoard() {
 
           <div className="space-y-4">
             {loading ? (
-              <p className="text-center py-8">Loading notices...</p>
+              <div className="flex items-center justify-center py-12">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+              </div>
             ) : notices.length === 0 ? (
-              <p className="text-center py-8 text-gray-500">No notices available</p>
+              <div className="text-center py-12">
+                <Megaphone size={48} className="mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                <p className="text-gray-500 dark:text-gray-400 font-medium">No notices available</p>
+              </div>
             ) : (
               notices.map((notice) => (
                 <Card key={notice._id}>
                   <div className="flex justify-between items-start">
                     <div className="flex-1">
-                      <div className="flex items-center space-x-3 mb-2">
+                      <div className="flex items-center gap-3 mb-3">
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white">{notice.title}</h3>
-                        <span className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(notice.category)}`}>
+                        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold capitalize ${getCategoryColor(notice.category)}`}>
+                          {getCategoryIcon(notice.category)}
                           {notice.category}
                         </span>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-300 mb-2">{notice.content}</p>
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
-                        Posted on {new Date(notice.createdAt).toLocaleDateString()}
+                      <p className="text-gray-600 dark:text-gray-300 mb-3 leading-relaxed">{notice.content}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">
+                        Posted on {new Date(notice.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}
                       </p>
                     </div>
                     {isAdmin && (
                       <button
                         onClick={() => handleDelete(notice._id)}
-                        className="text-red-600 hover:text-red-800"
+                        className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors ml-4"
+                        title="Delete"
                       >
-                        <Trash2 size={20} />
+                        <Trash2 size={16} />
                       </button>
                     )}
                   </div>

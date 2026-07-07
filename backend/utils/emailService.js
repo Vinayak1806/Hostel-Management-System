@@ -3,12 +3,10 @@ import nodemailer from 'nodemailer'
 // Create reusable transporter object using the default SMTP transport
 // Configure your environment variables for this to work
 const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: process.env.EMAIL_PORT || 587,
-  secure: false, // true for 465, false for other ports
+  service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER || 'test@example.com', // fallback for dev
-    pass: process.env.EMAIL_PASS || 'password123'
+    user: process.env.EMAIL_USER, // fallback for dev not needed if .env is properly set
+    pass: process.env.EMAIL_PASS
   }
 })
 

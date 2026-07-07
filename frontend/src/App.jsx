@@ -6,6 +6,11 @@ import { ThemeProvider } from './context/ThemeContext'
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
+import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import PrivacyPolicy from './pages/PrivacyPolicy'
+import TermsOfService from './pages/TermsOfService'
+import ContactUs from './pages/ContactUs'
+import ProfilePage from './pages/ProfilePage'
 import AdminDashboard from './pages/AdminDashboard'
 import StudentDashboard from './pages/StudentDashboard'
 import StudentManagement from './pages/StudentManagement'
@@ -21,6 +26,8 @@ import AdminPaymentDashboard from './pages/AdminPaymentDashboard'
 import AdminAttendancePanel from './pages/AdminAttendancePanel'
 import AdminNotificationPanel from './pages/AdminNotificationPanel'
 import NotFound from './pages/NotFound'
+
+import ChatBot from './components/ChatBot'
 
 // Protected Route Component
 const ProtectedRoute = ({ children, requiredRole = null }) => {
@@ -49,149 +56,166 @@ function AppRoutes() {
   }
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
-      <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
-      <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
+    <>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={!isAuthenticated ? <LandingPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
+        <Route path="/login" element={!isAuthenticated ? <LoginPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
+        <Route path="/signup" element={!isAuthenticated ? <SignupPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
+        <Route path="/forgot-password" element={!isAuthenticated ? <ForgotPasswordPage /> : <Navigate to={isAdmin ? '/admin' : '/dashboard'} />} />
+        
+        {/* Static Pages */}
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
+        <Route path="/contact" element={<ContactUs />} />
 
-      {/* Admin Routes */}
-      <Route
-        path="/admin"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/students"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <StudentManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/rooms"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <RoomManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/complaints"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <ComplaintManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/notices"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <NoticeBoard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/admissions"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdmissionManagement />
-          </ProtectedRoute>
-        }
-      />
+        {/* Admin Routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/students"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <StudentManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/rooms"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <RoomManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/complaints"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <ComplaintManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/notices"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <NoticeBoard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/admissions"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdmissionManagement />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Student Routes */}
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <StudentDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admission"
-        element={
-          <ProtectedRoute>
-            <AdmissionPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/complaints"
-        element={
-          <ProtectedRoute>
-            <ComplaintManagement />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/notices"
-        element={
-          <ProtectedRoute>
-            <NoticeBoard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/payments"
-        element={
-          <ProtectedRoute>
-            <PaymentDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/attendance"
-        element={
-          <ProtectedRoute>
-            <AttendanceTracker />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/notifications"
-        element={
-          <ProtectedRoute>
-            <NotificationCenter />
-          </ProtectedRoute>
-        }
-      />
+        {/* Student Routes */}
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <StudentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admission"
+          element={
+            <ProtectedRoute>
+              <AdmissionPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complaints"
+          element={
+            <ProtectedRoute>
+              <ComplaintManagement />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notices"
+          element={
+            <ProtectedRoute>
+              <NoticeBoard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/payments"
+          element={
+            <ProtectedRoute>
+              <PaymentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/attendance"
+          element={
+            <ProtectedRoute>
+              <AttendanceTracker />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <ProtectedRoute>
+              <NotificationCenter />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Admin Advanced Features Routes */}
-      <Route
-        path="/admin/payments"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminPaymentDashboard />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/attendance"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminAttendancePanel />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/admin/notifications"
-        element={
-          <ProtectedRoute requiredRole="admin">
-            <AdminNotificationPanel />
-          </ProtectedRoute>
-        }
-      />
+        {/* Admin Advanced Features Routes */}
+        <Route
+          path="/admin/payments"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminPaymentDashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/attendance"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminAttendancePanel />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/notifications"
+          element={
+            <ProtectedRoute requiredRole="admin">
+              <AdminNotificationPanel />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Fallback */}
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+        {/* Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+      {isAuthenticated && <ChatBot />}
+    </>
   )
 }
 
@@ -208,3 +232,4 @@ function App() {
 }
 
 export default App
+

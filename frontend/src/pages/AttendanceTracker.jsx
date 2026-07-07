@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Calendar, Clock, BarChart3, AlertCircle, CheckCircle } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
-import { Navbar, Card } from '../components'
+import { Navbar, Card, Table, Modal, Button, Badge } from '../components'
 import { attendanceAPI } from '../services'
 
 export default function AttendanceTracker() {
@@ -83,17 +83,34 @@ export default function AttendanceTracker() {
   const getStatusIcon = (status) => {
     switch (status) {
       case 'present':
-        return <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+        return <CheckCircle className="w-4 h-4" />
       case 'absent':
-        return <AlertCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+        return <AlertCircle className="w-4 h-4" />
       case 'late':
-        return <Clock className="w-5 h-5 text-yellow-600 dark:text-yellow-400" />
+        return <Clock className="w-4 h-4" />
       case 'on_leave':
-        return <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+        return <Calendar className="w-4 h-4" />
       default:
         return null
     }
   }
+
+  const columns = [
+    { key: 'date', label: 'Date', render: (val) => new Date(val).toLocaleDateString() },
+    { key: 'checkInTime', label: 'Check In', render: (val) => val ? formatTime(val) : '-' },
+    { key: 'checkOutTime', label: 'Check Out', render: (val) => val ? formatTime(val) : '-' },
+    { key: 'duration', label: 'Duration', render: (val) => val ? `${Math.floor(val / 60)}h ${val % 60}m` : '-' },
+    { 
+      key: 'status', 
+      label: 'Status', 
+      render: (status) => (
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold capitalize ${getStatusColor(status)}`}>
+          {getStatusIcon(status)}
+          {status.replace('_', ' ')}
+        </span>
+      )
+    }
+  ]
 
   if (loading) {
     return (
@@ -124,35 +141,35 @@ export default function AttendanceTracker() {
         {/* Summary Stats */}
         {summary && (
           <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-            <Card className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700">
-              <p className="text-gray-600 dark:text-gray-400 text-sm">Total Days</p>
-              <p className="text-3xl font-bold text-gray-900 dark:text-white mt-2">{summary.totalDays || 0}</p>
+            <Card className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm text-center">
+              <p className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Days</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white mt-1.5">{summary.totalDays || 0}</p>
             </Card>
-            <Card className="bg-green-50 dark:bg-green-900/20 rounded-xl p-4 border border-green-200 dark:border-green-700">
-              <p className="text-green-600 dark:text-green-400 text-sm">Present</p>
-              <p className="text-3xl font-bold text-green-900 dark:text-green-300 mt-2">{summary.present || 0}</p>
+            <Card className="bg-emerald-50 dark:bg-emerald-900/20 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-800/30 shadow-sm text-center">
+              <p className="text-emerald-600 dark:text-emerald-400 text-sm font-medium">Present</p>
+              <p className="text-3xl font-bold text-emerald-700 dark:text-emerald-300 mt-1.5">{summary.present || 0}</p>
             </Card>
-            <Card className="bg-red-50 dark:bg-red-900/20 rounded-xl p-4 border border-red-200 dark:border-red-700">
-              <p className="text-red-600 dark:text-red-400 text-sm">Absent</p>
-              <p className="text-3xl font-bold text-red-900 dark:text-red-300 mt-2">{summary.absent || 0}</p>
+            <Card className="bg-rose-50 dark:bg-rose-900/20 rounded-2xl p-4 border border-rose-100 dark:border-rose-800/30 shadow-sm text-center">
+              <p className="text-rose-600 dark:text-rose-400 text-sm font-medium">Absent</p>
+              <p className="text-3xl font-bold text-rose-700 dark:text-rose-300 mt-1.5">{summary.absent || 0}</p>
             </Card>
-            <Card className="bg-yellow-50 dark:bg-yellow-900/20 rounded-xl p-4 border border-yellow-200 dark:border-yellow-700">
-              <p className="text-yellow-600 dark:text-yellow-400 text-sm">Late</p>
-              <p className="text-3xl font-bold text-yellow-900 dark:text-yellow-300 mt-2">{summary.late || 0}</p>
+            <Card className="bg-amber-50 dark:bg-amber-900/20 rounded-2xl p-4 border border-amber-100 dark:border-amber-800/30 shadow-sm text-center">
+              <p className="text-amber-600 dark:text-amber-400 text-sm font-medium">Late</p>
+              <p className="text-3xl font-bold text-amber-700 dark:text-amber-300 mt-1.5">{summary.late || 0}</p>
             </Card>
-            <Card className="bg-blue-50 dark:bg-blue-900/20 rounded-xl p-4 border border-blue-200 dark:border-blue-700">
-              <p className="text-blue-600 dark:text-blue-400 text-sm">On Leave</p>
-              <p className="text-3xl font-bold text-blue-900 dark:text-blue-300 mt-2">{summary.onLeave || 0}</p>
+            <Card className="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-4 border border-blue-100 dark:border-blue-800/30 shadow-sm text-center">
+              <p className="text-blue-600 dark:text-blue-400 text-sm font-medium">On Leave</p>
+              <p className="text-3xl font-bold text-blue-700 dark:text-blue-300 mt-1.5">{summary.onLeave || 0}</p>
             </Card>
           </div>
         )}
 
         {/* Month/Year Filter */}
-        <Card className="bg-white dark:bg-gray-800 rounded-xl p-4 border border-gray-200 dark:border-gray-700 flex gap-4 flex-wrap">
+        <Card className="bg-white dark:bg-gray-800 rounded-2xl p-4 border border-gray-100 dark:border-gray-700 shadow-sm flex gap-4 flex-wrap">
           <select
             value={month}
             onChange={(e) => setMonth(parseInt(e.target.value))}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             {Array.from({ length: 12 }, (_, i) => (
               <option key={i + 1} value={i + 1}>
@@ -163,128 +180,72 @@ export default function AttendanceTracker() {
           <select
             value={year}
             onChange={(e) => setYear(parseInt(e.target.value))}
-            className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+            className="px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value={2024}>2024</option>
             <option value={2025}>2025</option>
             <option value={2026}>2026</option>
           </select>
-          </Card>
-
-          {/* Request Leave Button */}
-          <div className="flex justify-end">
-            <button
+          <div className="ml-auto">
+            <Button
               onClick={() => setShowLeaveModal(true)}
-              className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex items-center gap-2 transition shadow-md"
+              className="flex items-center gap-2 rounded-xl px-5"
             >
-              <Calendar className="w-5 h-5" />
+              <Calendar className="w-4 h-4" />
               Request Leave
-            </button>
+            </Button>
           </div>
+        </Card>
 
-          {/* Leave Modal */}
-          {showLeaveModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <Card className="bg-white dark:bg-gray-800 rounded-lg p-8 w-full max-w-md border border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white flex items-center gap-2">
-                  <Calendar className="w-6 h-6 text-blue-600" />
-                  Request Leave
-                </h2>
-                <form onSubmit={handleRequestLeave} className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Leave Date</label>
-                    <input
-                      type="date"
-                      value={leaveData.date}
-                      onChange={(e) => setLeaveData({ ...leaveData, date: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Reason</label>
-                    <textarea
-                      value={leaveData.reason}
-                      onChange={(e) => setLeaveData({ ...leaveData, reason: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      rows="3"
-                      required
-                      placeholder="Why do you need leave?"
-                    ></textarea>
-                  </div>
-                  <div className="flex gap-4 pt-4">
-                    <button
-                      type="submit"
-                      className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg flex-1 transition"
-                    >
-                      Submit
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowLeaveModal(false)}
-                      className="px-6 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 flex-1 transition"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </Card>
+        {/* Leave Modal */}
+        <Modal
+          isOpen={showLeaveModal}
+          title="Request Leave"
+          onClose={() => setShowLeaveModal(false)}
+          showCloseButton={false}
+        >
+          <form onSubmit={handleRequestLeave} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Leave Date</label>
+              <input
+                type="date"
+                value={leaveData.date}
+                onChange={(e) => setLeaveData({ ...leaveData, date: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+                required
+              />
             </div>
-          )}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Reason</label>
+              <textarea
+                value={leaveData.reason}
+                onChange={(e) => setLeaveData({ ...leaveData, reason: e.target.value })}
+                className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+                rows="3"
+                required
+                placeholder="Why do you need leave?"
+              ></textarea>
+            </div>
+            <div className="flex gap-3 pt-4">
+              <Button type="submit" className="flex-1">
+                Submit Request
+              </Button>
+              <Button variant="secondary" onClick={() => setShowLeaveModal(false)} className="flex-1">
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
 
           {/* Attendance History */}
-          <Card className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <Card className="p-6 bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-sm">
+            <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                 <Calendar className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                 Attendance History
               </h2>
             </div>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Check In</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Check Out</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Duration</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {attendance.length === 0 ? (
-                    <tr>
-                      <td colSpan="5" className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                        No attendance records found
-                      </td>
-                    </tr>
-                  ) : (
-                    attendance.map((record) => (
-                      <tr key={record._id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                          {new Date(record.date).toLocaleDateString()}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                          {record.checkInTime ? formatTime(record.checkInTime) : '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                          {record.checkOutTime ? formatTime(record.checkOutTime) : '-'}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                          {record.duration ? `${Math.floor(record.duration / 60)}h ${record.duration % 60}m` : '-'}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(record.status)}`}>
-                            {getStatusIcon(record.status)}
-                            {record.status.charAt(0).toUpperCase() + record.status.slice(1).replace('_', ' ')}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
+            <Table columns={columns} data={attendance} />
           </Card>
         </main>
       </div>

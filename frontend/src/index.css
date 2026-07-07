@@ -4,6 +4,13 @@
 
 * {
   @apply transition-all duration-200;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+*::-webkit-scrollbar {
+  display: none;
 }
 
 body {
@@ -41,3 +48,5 @@ body {
 .form-label {
   @apply block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2;
 }
+
+.animation-delay-2000 { animation-delay: 2s; }

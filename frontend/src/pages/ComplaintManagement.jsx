@@ -97,16 +97,19 @@ export default function ComplaintManagement() {
       <div className="flex-1 md:ml-64">
         <Navbar title={isAdmin ? 'Complaint Management' : 'My Complaints'} />
 
-        <main className="container py-8">
+        <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Complaints</h2>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Complaints</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{complaints.length} total complaints</p>
+            </div>
             {!isAdmin && (
               <Button
                 variant="primary"
                 onClick={() => setShowModal(true)}
-                className="flex items-center space-x-2"
+                className="flex items-center gap-2 rounded-xl px-5"
               >
                 <Plus size={18} />
                 <span>File Complaint</span>
@@ -120,26 +123,25 @@ export default function ComplaintManagement() {
               data={complaints}
               loading={loading}
               actions={(complaint) => (
-                <div className="flex space-x-2">
+                <div className="flex items-center gap-3">
                   {isAdmin && (
                     <select
                       value={complaint.status}
                       onChange={(e) => handleStatusChange(complaint._id, e.target.value)}
-                      className="text-sm px-2 py-1 border border-gray-300 rounded dark:bg-gray-700 dark:border-gray-600"
+                      className="text-sm px-3 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
                     >
                       <option value="pending">Pending</option>
                       <option value="in-progress">In Progress</option>
                       <option value="resolved">Resolved</option>
                     </select>
                   )}
-                  {(!isAdmin || isAdmin) && (
-                    <button
-                      onClick={() => handleDelete(complaint._id)}
-                      className="text-red-600 hover:text-red-800"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  )}
+                  <button
+                    onClick={() => handleDelete(complaint._id)}
+                    className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 size={16} />
+                  </button>
                 </div>
               )}
             />

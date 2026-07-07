@@ -4,7 +4,9 @@ import apiClient from './apiClient'
 export const authAPI = {
   login: (email, password) => apiClient.post('/auth/login', { email, password }),
   signup: (data) => apiClient.post('/auth/signup', data),
-  logout: () => apiClient.post('/auth/logout')
+  logout: () => apiClient.post('/auth/logout'),
+  forgotPassword: (email) => apiClient.post('/auth/forgot-password', { email }),
+  resetPassword: (data) => apiClient.post('/auth/reset-password', data)
 }
 
 // Student endpoints
@@ -91,4 +93,45 @@ export const notificationAPI = {
   clearAll: () => apiClient.delete('/notifications/clear-all'),
   sendNotification: (data) => apiClient.post('/notifications/send', data),
   sendBulkNotifications: (data) => apiClient.post('/notifications/bulk', data)
+}
+
+// Chat AI endpoints
+export const chatAPI = {
+  sendMessage: (message, history, currentUrl) => apiClient.post('/chat', { message, history, currentUrl })
+}
+
+// Profile endpoints
+export const profileAPI = {
+  getProfile: () => apiClient.get('/profile'),
+  updateProfile: (data) => apiClient.put('/profile', data),
+  uploadPhoto: (data) => apiClient.put('/profile/photo', data)
+}
+
+// Export endpoints — uses native fetch for robust blob handling
+export const exportAPI = {
+  downloadExcel: async () => {
+    const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+    const token = localStorage.getItem('token')
+    
+    const response = await fetch(`${API_BASE_URL}/exports/all/excel`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+
+    if (!response.ok) {
+      throw new Error(`Export failed with status ${response.status}`)
+    }
+
+    const blob = await response.blob()
+    const url = window.URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'Hostel_Hub_All_Data.xlsx')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    window.URL.revokeObjectURL(url)
+  }
 }

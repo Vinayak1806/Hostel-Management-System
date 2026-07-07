@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { Sidebar } from '../components/Sidebar'
 import { Navbar, Card, Button, Input, Table, Modal, Alert, Badge } from '../components'
 import { roomAPI } from '../services'
-import { Trash2, Edit2, Plus } from 'lucide-react'
+import { Trash2, Edit2, Plus, Search } from 'lucide-react'
 
 export default function RoomManagement() {
   const [rooms, setRooms] = useState([])
@@ -102,11 +102,14 @@ export default function RoomManagement() {
       <div className="flex-1 md:ml-64">
         <Navbar title="Room Management" />
 
-        <main className="container py-8">
+        <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Rooms</h2>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Rooms</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{rooms.length} rooms configured</p>
+            </div>
             <Button
               variant="primary"
               onClick={() => {
@@ -114,7 +117,7 @@ export default function RoomManagement() {
                 setEditingId(null)
                 setShowModal(true)
               }}
-              className="flex items-center space-x-2"
+              className="flex items-center gap-2 rounded-xl px-5"
             >
               <Plus size={18} />
               <span>Add Room</span>
@@ -127,18 +130,20 @@ export default function RoomManagement() {
               data={rooms}
               loading={loading}
               actions={(room) => (
-                <div className="flex space-x-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleEdit(room)}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                    title="Edit"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(room._id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+                    title="Delete"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               )}

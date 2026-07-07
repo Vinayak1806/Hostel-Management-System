@@ -1,6 +1,6 @@
+import 'dotenv/config'
 import express from 'express'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import connectDB from './config/database.js'
 
 // Import routes
@@ -14,9 +14,9 @@ import admissionRoutes from './routes/admissionRoutes.js'
 import paymentRoutes from './routes/paymentRoutes.js'
 import attendanceRoutes from './routes/attendanceRoutes.js'
 import notificationRoutes from './routes/notificationRoutes.js'
-
-// Load environment variables
-dotenv.config()
+import chatRoutes from './routes/chatRoutes.js'
+import profileRoutes from './routes/profileRoutes.js'
+import exportRoutes from './routes/exportRoutes.js'
 
 const app = express()
 const PORT = process.env.PORT || 5000
@@ -26,8 +26,8 @@ app.use(cors({
   origin: true,
   credentials: true
 }))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(express.json({ limit: '50mb' }))
+app.use(express.urlencoded({ limit: '50mb', extended: true }))
 
 // Connect to database
 await connectDB()
@@ -48,6 +48,9 @@ app.use('/api/admissions', admissionRoutes)
 app.use('/api/payments', paymentRoutes)
 app.use('/api/attendance', attendanceRoutes)
 app.use('/api/notifications', notificationRoutes)
+app.use('/api/chat', chatRoutes)
+app.use('/api/profile', profileRoutes)
+app.use('/api/exports', exportRoutes)
 
 // Error handling middleware
 app.use((err, req, res, next) => {

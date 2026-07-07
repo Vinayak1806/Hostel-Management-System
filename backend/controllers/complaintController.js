@@ -79,10 +79,10 @@ export const updateComplaintStatus = async (req, res) => {
     }).save()
 
     // Send email
-    if (complaint.student.email) {
+    if (status === 'resolved' && complaint.student.email) {
       await sendEmail({
         to: complaint.student.email,
-        subject: 'Complaint Status Update',
+        subject: 'Complaint Resolved',
         html: emailTemplates.complaintUpdate(complaint.student.name, complaint.title, status)
       })
     }

@@ -1,147 +1,193 @@
-import { useNavigate } from 'react-router-dom'
-import { Button } from '../components'
-import { Building2, Wifi, Utensils, Users, Award, Shield, BookOpen, Heart } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { CreditCard, Wrench, CalendarCheck, Bell, ArrowRight, CheckCircle2, Sparkles, MapPin, Phone, Mail, Shield, Wifi } from 'lucide-react'
 
 export default function LandingPage() {
   const navigate = useNavigate()
 
   const facilities = [
-    { icon: Wifi, title: 'High-Speed WiFi', description: '24/7 internet connectivity in all rooms' },
-    { icon: Utensils, title: 'Dining Facility', description: 'Hygienic and nutritious meals daily' },
-    { icon: Users, title: 'Common Areas', description: 'Recreational spaces for student activities' },
-    { icon: Shield, title: 'Security', description: '24/7 CCTV monitoring and security staff' },
+    { icon: CreditCard, title: 'Fee Management', description: 'Track and pay hostel fees online. Get instant receipts and overdue alerts.', color: 'from-blue-500 to-cyan-400' },
+    { icon: Wrench, title: 'Complaint Tracking', description: 'Register maintenance issues and track resolution status in real-time.', color: 'from-violet-500 to-purple-400' },
+    { icon: CalendarCheck, title: 'Smart Attendance', description: 'Automated tracking. View monthly presence and maintain required percentages.', color: 'from-emerald-500 to-teal-400' },
+    { icon: Bell, title: 'Digital Notice Board', description: 'Get instant notifications for events, rules, and announcements.', color: 'from-amber-500 to-orange-400' },
   ]
 
-  const rules = [
-    'Maintain discipline and cleanliness in the hostel',
-    'No loud music or noise after 10 PM',
-    'Visitors must register at the reception desk',
-    'Alcohol and smoking are strictly prohibited',
-    'Respect your roommates and maintain cordial relations',
-    'Participate in hostel activities and events',
+  const stats = [
+    { label: 'Happy Students', value: '1,500+' },
+    { label: 'Rooms Managed', value: '450' },
+    { label: 'Complaints Resolved', value: '99%' },
+    { label: 'System Uptime', value: '99.9%' },
   ]
 
-  const announcements = [
+  const contactInfo = [
     {
-      title: 'Admission Portal Now Open',
-      description: 'Students can now submit their hostel admission requests through the online portal.',
-      date: 'May 29, 2026'
+      icon: MapPin,
+      title: 'Our Location',
+      lines: ['Hostel Hub, Near Swargate Bus Stand', 'Swargate, Pune, Maharashtra 411042'],
     },
     {
-      title: 'Sports Day - June 15, 2026',
-      description: 'Annual hostel sports day with various competitions and events. All students welcome!',
-      date: 'May 28, 2026'
+      icon: Phone,
+      title: 'Call Us',
+      lines: ['+91 98765 43210', 'Mon–Sat, 9 AM – 6 PM'],
     },
     {
-      title: 'Fee Submission Deadline',
-      description: 'Submit your hostel fees by month-end to avoid penalties.',
-      date: 'May 25, 2026'
+      icon: Mail,
+      title: 'Email Us',
+      lines: ['admissions@hostelhub.com', 'support@hostelhub.com'],
     },
   ]
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-gray-900 dark:to-gray-800">
-      {/* Navigation Bar */}
-      <nav className="bg-white dark:bg-gray-800 shadow-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <img src="/logo.jpeg" alt="Hostel Hub" className="w-8 h-8 rounded-full object-cover" />
-            <span className="text-2xl font-bold text-gray-900 dark:text-white">Hostel Hub</span>
+    <div className="min-h-screen bg-slate-900 font-sans text-white">
+      {/* Navigation */}
+      <nav className="fixed w-full bg-slate-900/90 backdrop-blur-lg border-b border-slate-700/50 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
+            <img src="/logo.jpeg" alt="Hostel Hub" className="w-9 h-9 rounded-lg object-cover" />
+            <span className="text-xl font-bold text-white">Hostel Hub</span>
           </div>
-          <div className="flex gap-3">
-            <Button variant="secondary" onClick={() => navigate('/login')}>
+          <div className="flex gap-3 items-center">
+            <button
+              onClick={() => navigate('/login')}
+              className="text-slate-300 hover:text-white font-medium text-sm px-4 py-2 rounded-lg hover:bg-slate-800 transition-all"
+            >
               Sign In
-            </Button>
-            <Button variant="primary" onClick={() => navigate('/signup')}>
-              Register
-            </Button>
+            </button>
+            <button
+              onClick={() => navigate('/signup')}
+              className="bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm px-5 py-2 rounded-lg shadow-md shadow-blue-600/30 hover:shadow-lg hover:shadow-blue-500/40 transition-all"
+            >
+              Apply Now
+            </button>
           </div>
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 pb-32 bg-gradient-to-br from-white via-slate-50 to-slate-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center min-h-[500px]">
-            {/* Left Column - Text Content */}
-            <div className="flex flex-col justify-center">
-              <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6 leading-tight">
-                Welcome to Your <span className="text-blue-600 dark:text-blue-400">Perfect Hostel</span> Home
+      {/* Hero */}
+      <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-16 overflow-hidden">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-3xl translate-y-1/2 -translate-x-1/3" />
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+            <div className="text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 font-medium text-xs mb-4 border border-blue-500/20">
+                <Sparkles size={14} />
+                <span>Next-Gen Hostel Management</span>
+              </div>
+              <h1 className="text-4xl lg:text-[3.5rem] font-extrabold text-white tracking-tight mb-4 leading-[1.15]">
+                Your Home <br className="hidden lg:block"/>
+                Away From{' '}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">Home.</span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-200 mb-10 leading-relaxed max-w-xl">
-                Experience comfortable living with world-class facilities, security, and a vibrant community. Your second home awaits!
+              <p className="text-base lg:text-lg text-slate-400 mb-6 max-w-lg mx-auto lg:mx-0 leading-relaxed">
+                Comfort, security, and a digital-first community. Manage attendance, fees, and complaints seamlessly from your dashboard.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 w-fit">
-                <Button variant="primary" size="lg" onClick={() => navigate('/signup')}>
-                  Apply for Admission
-                </Button>
-                <Button variant="secondary" size="lg" onClick={() => navigate('/login')}>
-                  Existing Student? Login
-                </Button>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                <button
+                  onClick={() => navigate('/signup')}
+                  className="group inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-500 text-white font-semibold px-6 py-2.5 rounded-lg shadow-lg shadow-blue-600/25 hover:shadow-blue-500/40 transition-all"
+                >
+                  Book Your Room <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                <button
+                  onClick={() => navigate('/login')}
+                  className="inline-flex items-center justify-center bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-2.5 rounded-lg border border-slate-700 hover:border-slate-600 transition-all"
+                >
+                  Student Portal
+                </button>
+              </div>
+
+              <div className="mt-8 pt-6 border-t border-slate-800 flex items-center justify-center lg:justify-start gap-5">
+                <div className="flex items-center gap-1.5 text-slate-400">
+                  <CheckCircle2 size={16} className="text-emerald-400" />
+                  <span className="text-sm font-medium">Verified Security</span>
+                </div>
+                <div className="flex items-center gap-1.5 text-slate-400">
+                  <CheckCircle2 size={16} className="text-emerald-400" />
+                  <span className="text-sm font-medium">Top Rated</span>
+                </div>
               </div>
             </div>
-            
-            {/* Right Column - Visual */}
-            <div className="relative h-96 md:h-full min-h-[400px] bg-gradient-to-br from-blue-400 to-blue-600 rounded-3xl shadow-2xl flex items-center justify-center">
-              <div className="text-center text-white">
-                <Building2 className="w-40 h-40 mx-auto mb-6 opacity-90" />
-                <p className="text-3xl font-bold">Modern Hostel Living</p>
+
+            {/* Right Visual */}
+            <div className="relative h-[380px] lg:h-[440px] flex items-center justify-center">
+              <div className="relative w-full max-w-xs aspect-[4/5] bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl shadow-2xl shadow-blue-600/20 overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80')] mix-blend-overlay opacity-40 bg-cover bg-center" />
+
+                <div className="absolute -left-4 top-8 bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-700 animate-float">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-blue-500/20 rounded-full flex items-center justify-center">
+                      <Wifi size={16} className="text-blue-400" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white text-xs">1 Gbps</p>
+                      <p className="text-[10px] text-slate-400">Free WiFi</p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="absolute -right-4 bottom-16 bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-700 animate-float animation-delay-2000">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-9 h-9 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                      <Shield size={16} className="text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-white text-xs">24/7</p>
+                      <p className="text-[10px] text-slate-400">Security</p>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Key Highlights */}
-      <section className="py-16 bg-white dark:bg-gray-800 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            Why Choose Our Hostel?
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-gray-700 dark:to-gray-600 rounded-xl text-center">
-              <Award className="w-12 h-12 text-blue-600 mx-auto mb-3" />
-              <p className="font-semibold text-gray-900 dark:text-white">500+ Students</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">Living happily</p>
-            </div>
-            <div className="p-6 bg-gradient-to-br from-green-50 to-green-100 dark:from-gray-700 dark:to-gray-600 rounded-xl text-center">
-              <Shield className="w-12 h-12 text-green-600 mx-auto mb-3" />
-              <p className="font-semibold text-gray-900 dark:text-white">100% Secure</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">24/7 Safety</p>
-            </div>
-            <div className="p-6 bg-gradient-to-br from-purple-50 to-purple-100 dark:from-gray-700 dark:to-gray-600 rounded-xl text-center">
-              <BookOpen className="w-12 h-12 text-purple-600 mx-auto mb-3" />
-              <p className="font-semibold text-gray-900 dark:text-white">Study Friendly</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">Quiet zones available</p>
-            </div>
-            <div className="p-6 bg-gradient-to-br from-pink-50 to-pink-100 dark:from-gray-700 dark:to-gray-600 rounded-xl text-center">
-              <Heart className="w-12 h-12 text-pink-600 mx-auto mb-3" />
-              <p className="font-semibold text-gray-900 dark:text-white">Community</p>
-              <p className="text-sm text-gray-600 dark:text-gray-300">Like a family</p>
-            </div>
+      {/* Stats */}
+      <section className="py-6 bg-slate-800/50 border-y border-slate-700/50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-slate-700/50">
+            {stats.map((stat, idx) => (
+              <div key={idx} className="text-center py-3 px-4">
+                <p className="text-2xl lg:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400 mb-0.5">
+                  {stat.value}
+                </p>
+                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{stat.label}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Facilities Section */}
-      <section className="py-16">
+      {/* Facilities */}
+      <section className="py-16 bg-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            World-Class Facilities
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="text-center max-w-xl mx-auto mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Everything You Need
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Manage your entire hostel life right from your phone.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {facilities.map((facility, idx) => {
               const Icon = facility.icon
               return (
                 <div
                   key={idx}
-                  className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-xl transition-shadow"
+                  className="group bg-slate-800/60 p-5 rounded-xl border border-slate-700/50 hover:border-slate-600 hover:bg-slate-800 hover:-translate-y-1 hover:shadow-xl hover:shadow-black/20 transition-all duration-300"
                 >
-                  <Icon className="w-12 h-12 text-blue-600 mb-4" />
-                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                  <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${facility.color} flex items-center justify-center mb-4 shadow-md group-hover:scale-110 transition-transform duration-300`}>
+                    <Icon className="w-5 h-5 text-white" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-1.5">
                     {facility.title}
                   </h3>
-                  <p className="text-gray-600 dark:text-gray-300">{facility.description}</p>
+                  <p className="text-sm text-slate-400 leading-relaxed">
+                    {facility.description}
+                  </p>
                 </div>
               )
             })}
@@ -149,114 +195,77 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Hostel Rules */}
-      <section className="py-16 bg-slate-50 dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            Hostel Rules & Regulations
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {rules.map((rule, idx) => (
-              <div key={idx} className="flex gap-4 p-4 bg-white dark:bg-gray-700 rounded-lg shadow-sm">
-                <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center flex-shrink-0 mt-1">
-                  {idx + 1}
+      {/* Location & Contact */}
+      <section className="py-16 bg-slate-800/30">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">
+              Visit Us in Pune
+            </h2>
+            <p className="text-slate-400 text-sm">
+              Easy access to major educational institutes and transit hubs.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {contactInfo.map((item, idx) => {
+              const Icon = item.icon
+              return (
+                <div
+                  key={idx}
+                  className="group bg-slate-800/60 rounded-xl p-5 border border-slate-700/50 hover:border-blue-500/40 hover:bg-slate-800 transition-all duration-300"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/15 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:shadow-md group-hover:shadow-blue-600/20 transition-all duration-300">
+                      <Icon className="w-5 h-5 text-blue-400 group-hover:text-white transition-colors duration-300" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-white mb-1">{item.title}</h4>
+                      {item.lines.map((line, i) => (
+                        <p key={i} className="text-sm text-slate-400 leading-relaxed">{line}</p>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-                <p className="text-gray-700 dark:text-gray-200">{rule}</p>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </section>
 
-      {/* Announcements */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-900 dark:text-white">
-            Latest Announcements
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {announcements.map((announcement, idx) => (
-              <div
-                key={idx}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-shadow p-6 border-l-4 border-blue-600"
-              >
-                <p className="text-sm text-blue-600 font-semibold mb-2">{announcement.date}</p>
-                <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-3">
-                  {announcement.title}
-                </h3>
-                <p className="text-gray-600 dark:text-gray-300">{announcement.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      {/* CTA */}
+      <section className="py-14 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.08),transparent_60%)]" />
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-blue-600 to-blue-700 dark:from-blue-900 dark:to-blue-800">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-bold text-white mb-4">Ready to Join Us?</h2>
-          <p className="text-xl text-blue-100 mb-8">
-            Start your hostel journey today with a simple registration process.
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">Ready to secure your spot?</h2>
+          <p className="text-blue-100 mb-6 max-w-md mx-auto">
+            Rooms are filling up fast. Join our community today.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap">
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => navigate('/signup')}
-              className="bg-white text-blue-600 hover:bg-blue-50"
-            >
-              Register Now
-            </Button>
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => navigate('/login')}
-              className="border-white text-white hover:bg-white/20"
-            >
-              Sign In
-            </Button>
-          </div>
+          <button
+            onClick={() => navigate('/signup')}
+            className="group inline-flex items-center gap-2 bg-white hover:bg-blue-50 text-blue-700 font-bold px-7 py-3 rounded-lg shadow-xl hover:shadow-2xl transition-all hover:scale-[1.03]"
+          >
+            Start Application <ArrowRight size={18} className="group-hover:translate-x-0.5 transition-transform" />
+          </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 dark:bg-black text-gray-300 py-12">
+      <footer className="bg-slate-950 text-slate-500 py-5 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <img src="/logo.jpeg" alt="Hostel Hub" className="w-6 h-6 rounded-full object-cover" />
-                <span className="font-bold text-white">Hostel Hub</span>
-              </div>
-              <p className="text-sm">Your second home with world-class facilities.</p>
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
+            <div className="flex items-center gap-2">
+              <img src="/logo.jpeg" alt="Hostel Hub" className="w-5 h-5 rounded object-cover opacity-70" />
+              <span className="font-semibold text-slate-300">Hostel Hub</span>
             </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Quick Links</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">About Us</a></li>
-                <li><a href="#" className="hover:text-white transition">Facilities</a></li>
-                <li><a href="#" className="hover:text-white transition">Admissions</a></li>
-              </ul>
+            <div className="flex gap-5 text-slate-400">
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link>
+              <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Contact</h4>
-              <ul className="space-y-2 text-sm">
-                <li>Phone: +91 98765 43210</li>
-                <li>Email: info@hostel.com</li>
-                <li>Address: Campus Road, City</li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-semibold text-white mb-4">Follow Us</h4>
-              <ul className="space-y-2 text-sm">
-                <li><a href="#" className="hover:text-white transition">Facebook</a></li>
-                <li><a href="#" className="hover:text-white transition">Instagram</a></li>
-                <li><a href="#" className="hover:text-white transition">Twitter</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="border-t border-gray-800 pt-8 text-center text-sm">
-            <p>&copy; 2026 Hostel Hub. All rights reserved.</p>
+            <span className="text-slate-500">&copy; {new Date().getFullYear()} Hostel Hub</span>
           </div>
         </div>
       </footer>

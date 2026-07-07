@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { CreditCard, DollarSign, Clock, CheckCircle, AlertCircle, Download } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
-import { Navbar, Card } from '../components'
+import { Navbar, Card, Table, Badge, Button } from '../components'
 import { paymentAPI } from '../services'
 
 export default function PaymentDashboard() {
@@ -89,15 +89,65 @@ Thank you for your payment!
   const getStatusIcon = (status) => {
     switch (status) {
       case 'completed':
-        return <CheckCircle className="w-5 h-5" />
+        return <CheckCircle className="w-4 h-4" />
       case 'pending':
-        return <Clock className="w-5 h-5" />
+        return <Clock className="w-4 h-4" />
       case 'failed':
-        return <AlertCircle className="w-5 h-5" />
+        return <AlertCircle className="w-4 h-4" />
       default:
         return null
     }
   }
+
+  const columns = [
+    { key: 'createdAt', label: 'Date', render: (date) => new Date(date).toLocaleDateString() },
+    { key: 'description', label: 'Description' },
+    { key: 'semester', label: 'Semester', render: (sem) => `Sem ${sem}` },
+    { key: 'amount', label: 'Amount', render: (amt) => <span className="font-semibold">{formatCurrency(amt)}</span> },
+    { key: 'dueDate', label: 'Due Date', render: (date) => new Date(date).toLocaleDateString() },
+    {
+      key: 'status',
+      label: 'Status',
+      render: (status) => (
+        <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold capitalize ${getStatusColor(status)}`}>
+          {getStatusIcon(status)}
+          {status}
+        </span>
+      )
+    }
+  ]
+
+  const tableActions = (payment) => (
+    <div className="flex items-center gap-2">
+      {payment.status === 'completed' && (
+        <button 
+          onClick={() => handleDownloadInvoice(payment._id)}
+          className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors flex items-center gap-1.5 font-medium text-sm"
+        >
+          <Download className="w-4 h-4" />
+          Invoice
+        </button>
+      )}
+      {payment.status === 'pending' && (
+        <Button 
+          size="sm"
+          onClick={async () => {
+            try {
+              setLoading(true)
+              await paymentAPI.processPayment(payment._id)
+              fetchPayments()
+            } catch (err) {
+              setError(err.message || 'Payment failed')
+              setLoading(false)
+            }
+          }}
+          className="bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+        >
+          Pay Now
+        </Button>
+      )}
+    </div>
+  )
 
   if (loading) {
     return (
@@ -128,133 +178,68 @@ Thank you for your payment!
       {/* Summary Cards */}
       {summary && (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-700 dark:to-blue-800 p-6 text-white rounded-xl border-0">
+          <Card className="bg-gradient-to-br from-indigo-500 to-blue-600 dark:from-indigo-600 dark:to-blue-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-blue-500/20">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100">Total Amount</p>
-                <p className="text-3xl font-bold mt-2">{formatCurrency(summary.totalAmount || 0)}</p>
+                <p className="text-blue-100 font-medium text-sm">Total Amount</p>
+                <p className="text-3xl font-bold mt-2 tracking-tight">{formatCurrency(summary.totalAmount || 0)}</p>
               </div>
-              <DollarSign className="w-12 h-12 opacity-20" />
+              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <DollarSign className="w-8 h-8 text-white" />
+              </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-700 dark:to-green-800 p-6 text-white rounded-xl border-0">
+          <Card className="bg-gradient-to-br from-teal-400 to-emerald-600 dark:from-teal-600 dark:to-emerald-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-emerald-500/20">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-100">Paid Amount</p>
-                <p className="text-3xl font-bold mt-2">{formatCurrency(summary.paidAmount || 0)}</p>
-                <p className="text-sm text-green-100 mt-1">{summary.completedPayments || 0} payments</p>
+                <p className="text-emerald-100 font-medium text-sm">Paid Amount</p>
+                <p className="text-3xl font-bold mt-2 tracking-tight">{formatCurrency(summary.paidAmount || 0)}</p>
+                <p className="text-xs text-emerald-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">{summary.completedPayments || 0} payments</p>
               </div>
-              <CheckCircle className="w-12 h-12 opacity-20" />
+              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <CheckCircle className="w-8 h-8 text-white" />
+              </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 dark:from-yellow-700 dark:to-yellow-800 p-6 text-white rounded-xl border-0">
+          <Card className="bg-gradient-to-br from-amber-400 to-orange-500 dark:from-amber-600 dark:to-orange-700 p-6 text-white rounded-2xl border-0 shadow-lg shadow-orange-500/20">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-yellow-100">Pending Amount</p>
-                <p className="text-3xl font-bold mt-2">{formatCurrency(summary.pendingAmount || 0)}</p>
-                <p className="text-sm text-yellow-100 mt-1">{summary.pendingPayments || 0} payments</p>
+                <p className="text-orange-100 font-medium text-sm">Pending Amount</p>
+                <p className="text-3xl font-bold mt-2 tracking-tight">{formatCurrency(summary.pendingAmount || 0)}</p>
+                <p className="text-xs text-orange-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">{summary.pendingPayments || 0} payments</p>
               </div>
-              <Clock className="w-12 h-12 opacity-20" />
+              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <Clock className="w-8 h-8 text-white" />
+              </div>
             </div>
           </Card>
 
-          <Card className="bg-gradient-to-br from-red-500 to-red-600 dark:from-red-700 dark:to-red-800 p-6 text-white rounded-xl border-0">
+          <Card className="bg-gradient-to-br from-rose-400 to-pink-600 dark:from-rose-600 dark:to-pink-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-pink-500/20">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-red-100">Failed Payments</p>
-                <p className="text-3xl font-bold mt-2">{summary.failedPayments || 0}</p>
-                <p className="text-sm text-red-100 mt-1">Needs action</p>
+                <p className="text-pink-100 font-medium text-sm">Failed Payments</p>
+                <p className="text-3xl font-bold mt-2 tracking-tight">{summary.failedPayments || 0}</p>
+                <p className="text-xs text-pink-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">Needs action</p>
               </div>
-              <AlertCircle className="w-12 h-12 opacity-20" />
+              <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                <AlertCircle className="w-8 h-8 text-white" />
+              </div>
             </div>
           </Card>
         </div>
       )}
 
       {/* Payment History */}
-      <Card className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+      <Card className="rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm p-6">
+        <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-            <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+            <CreditCard className="w-5 h-5 text-indigo-500" />
             Payment History
           </h2>
         </div>
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Date</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Description</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Semester</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {payments.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                    No payments found
-                  </td>
-                </tr>
-              ) : (
-                payments.map((payment) => (
-                  <tr key={payment._id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                      {new Date(payment.createdAt).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">{payment.description}</td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Sem {payment.semester}</td>
-                    <td className="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-gray-300">
-                      {formatCurrency(payment.amount)}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">
-                      {new Date(payment.dueDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4">
-                      <span className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(payment.status)}`}>
-                        {getStatusIcon(payment.status)}
-                        {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      {payment.status === 'completed' && (
-                        <button 
-                          onClick={() => handleDownloadInvoice(payment._id)}
-                          className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 font-semibold flex items-center gap-1"
-                        >
-                          <Download className="w-4 h-4" />
-                          Invoice
-                        </button>
-                      )}
-                      {payment.status === 'pending' && (
-                        <button 
-                          onClick={async () => {
-                            try {
-                              setLoading(true)
-                              await paymentAPI.processPayment(payment._id)
-                              fetchPayments()
-                            } catch (err) {
-                              setError(err.message || 'Payment failed')
-                              setLoading(false)
-                            }
-                          }}
-                          className="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 font-semibold"
-                        >
-                          Pay Now
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
+        <Table columns={columns} data={payments} actions={tableActions} />
       </Card>
         </main>
       </div>

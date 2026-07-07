@@ -58,6 +58,18 @@ const userSchema = new mongoose.Schema(
     isActive: {
       type: Boolean,
       default: true
+    },
+    resetOTP: {
+      type: String,
+      sparse: true
+    },
+    resetOTPExpiry: {
+      type: Date,
+      sparse: true
+    },
+    profilePhoto: {
+      type: String,
+      sparse: true
     }
   },
   { timestamps: true }

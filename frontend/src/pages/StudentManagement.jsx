@@ -2,12 +2,13 @@ import { useState, useEffect } from 'react'
 import { Sidebar } from '../components/Sidebar'
 import { Navbar, Card, Button, Input, Table, Modal, Alert } from '../components'
 import { studentAPI } from '../services'
-import { Trash2, Edit2, Plus } from 'lucide-react'
+import { Trash2, Edit2, Plus, Search, Users } from 'lucide-react'
 
 export default function StudentManagement() {
   const [students, setStudents] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [searchTerm, setSearchTerm] = useState('')
   const [showModal, setShowModal] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -82,17 +83,26 @@ export default function StudentManagement() {
     { key: 'semester', label: 'Semester' }
   ]
 
+  const filteredStudents = students.filter(s =>
+    s.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    s.rollNumber?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
   return (
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
         <Navbar title="Student Management" />
 
-        <main className="container py-8">
+        <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Students</h2>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Students</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{students.length} total students registered</p>
+            </div>
             <Button
               variant="primary"
               onClick={() => {
@@ -100,31 +110,44 @@ export default function StudentManagement() {
                 setEditingId(null)
                 setShowModal(true)
               }}
-              className="flex items-center space-x-2"
+              className="flex items-center gap-2 rounded-xl px-5"
             >
               <Plus size={18} />
               <span>Add Student</span>
             </Button>
           </div>
 
+          <div className="relative mb-6">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={18} />
+            <input
+              type="text"
+              placeholder="Search by name, email, or roll number..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-11 pr-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white transition-shadow"
+            />
+          </div>
+
           <Card>
             <Table
               columns={columns}
-              data={students}
+              data={filteredStudents}
               loading={loading}
               actions={(student) => (
-                <div className="flex space-x-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => handleEdit(student)}
-                    className="text-blue-600 hover:text-blue-800"
+                    className="p-2 rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 transition-colors"
+                    title="Edit"
                   >
-                    <Edit2 size={18} />
+                    <Edit2 size={16} />
                   </button>
                   <button
                     onClick={() => handleDelete(student._id)}
-                    className="text-red-600 hover:text-red-800"
+                    className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+                    title="Delete"
                   >
-                    <Trash2 size={18} />
+                    <Trash2 size={16} />
                   </button>
                 </div>
               )}

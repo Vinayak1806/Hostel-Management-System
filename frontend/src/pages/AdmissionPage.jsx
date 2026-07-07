@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Building2, User, Phone, MapPin, Award, Heart, ClipboardCheck, Sparkles } from 'lucide-react'
+import { Building2, User, Phone, MapPin, Award, Heart, ClipboardCheck, Sparkles, Ban } from 'lucide-react'
 import { Navbar, Sidebar, Card, Button, Input, Select, Textarea, Alert } from '../components'
 import { admissionAPI } from '../services'
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { DollarSign, TrendingUp, Users, CheckCircle, AlertCircle, Plus, Edit2, Trash2 } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
-import { Navbar, Card } from '../components'
+import { Navbar, Card, Button, Table, Modal, Badge } from '../components'
 import { paymentAPI } from '../services'
 
 export default function AdminPaymentDashboard() {
@@ -85,20 +85,36 @@ export default function AdminPaymentDashboard() {
     }).format(amount)
   }
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'completed':
-        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
-      case 'failed':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-      case 'cancelled':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300'
-    }
-  }
+  const columns = [
+    { key: 'student', label: 'Student', render: (val) => val?.name || 'N/A' },
+    { key: 'amount', label: 'Amount', render: (amt) => <span className="font-semibold">{formatCurrency(amt)}</span> },
+    { key: 'semester', label: 'Semester', render: (sem) => `Semester ${sem}` },
+    { key: 'dueDate', label: 'Due Date', render: (date) => new Date(date).toLocaleDateString() },
+    { key: 'paymentMethod', label: 'Method', render: (val) => <span className="capitalize">{val}</span> },
+    { key: 'status', label: 'Status', render: (status) => <Badge status={status} /> }
+  ]
+
+  const actions = (payment) => (
+    <div className="flex items-center gap-2">
+      <select
+        value={payment.status}
+        onChange={(e) => handleStatusChange(payment._id, e.target.value)}
+        className="text-xs px-2 py-1.5 border border-gray-200 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 transition-shadow"
+      >
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+        <option value="failed">Failed</option>
+        <option value="cancelled">Cancelled</option>
+      </select>
+      <button 
+        onClick={() => handleDelete(payment._id)}
+        className="p-2 rounded-lg text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 transition-colors"
+        title="Delete"
+      >
+        <Trash2 size={16} />
+      </button>
+    </div>
+  )
 
   if (loading) {
     return (
@@ -129,46 +145,54 @@ export default function AdminPaymentDashboard() {
           {/* Summary Cards */}
           {stats && (
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-              <Card className="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-700 dark:to-blue-800 rounded-lg p-6 text-white border-0">
+              <Card className="bg-gradient-to-br from-indigo-500 to-blue-600 dark:from-indigo-600 dark:to-blue-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-blue-500/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-100">Total Revenue</p>
-                    <p className="text-3xl font-bold mt-2">{formatCurrency(stats.totalRevenue || 0)}</p>
+                    <p className="text-blue-100 font-medium text-sm">Total Revenue</p>
+                    <p className="text-3xl font-bold mt-2 tracking-tight">{formatCurrency(stats.totalRevenue || 0)}</p>
                   </div>
-                  <DollarSign className="w-12 h-12 opacity-20" />
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <DollarSign className="w-8 h-8 text-white" />
+                  </div>
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-700 dark:to-green-800 rounded-lg p-6 text-white border-0">
+              <Card className="bg-gradient-to-br from-teal-400 to-emerald-600 dark:from-teal-600 dark:to-emerald-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-emerald-500/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-green-100">Completed</p>
-                    <p className="text-3xl font-bold mt-2">{stats.completedCount || 0}</p>
-                    <p className="text-sm text-green-100 mt-1">{formatCurrency(stats.completedAmount || 0)}</p>
+                    <p className="text-emerald-100 font-medium text-sm">Completed</p>
+                    <p className="text-3xl font-bold mt-2 tracking-tight">{stats.completedCount || 0}</p>
+                    <p className="text-xs text-emerald-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">{formatCurrency(stats.completedAmount || 0)}</p>
                   </div>
-                  <CheckCircle className="w-12 h-12 opacity-20" />
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <CheckCircle className="w-8 h-8 text-white" />
+                  </div>
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-yellow-500 to-yellow-600 dark:from-yellow-700 dark:to-yellow-800 rounded-lg p-6 text-white border-0">
+              <Card className="bg-gradient-to-br from-amber-400 to-orange-500 dark:from-amber-600 dark:to-orange-700 p-6 text-white rounded-2xl border-0 shadow-lg shadow-orange-500/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-yellow-100">Pending</p>
-                    <p className="text-3xl font-bold mt-2">{stats.pendingCount || 0}</p>
-                    <p className="text-sm text-yellow-100 mt-1">{formatCurrency(stats.pendingAmount || 0)}</p>
+                    <p className="text-orange-100 font-medium text-sm">Pending</p>
+                    <p className="text-3xl font-bold mt-2 tracking-tight">{stats.pendingCount || 0}</p>
+                    <p className="text-xs text-orange-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">{formatCurrency(stats.pendingAmount || 0)}</p>
                   </div>
-                  <TrendingUp className="w-12 h-12 opacity-20" />
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
                 </div>
               </Card>
 
-              <Card className="bg-gradient-to-br from-red-500 to-red-600 dark:from-red-700 dark:to-red-800 rounded-lg p-6 text-white border-0">
+              <Card className="bg-gradient-to-br from-rose-400 to-pink-600 dark:from-rose-600 dark:to-pink-800 p-6 text-white rounded-2xl border-0 shadow-lg shadow-pink-500/20">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-red-100">Failed</p>
-                    <p className="text-3xl font-bold mt-2">{stats.failedCount || 0}</p>
-                    <p className="text-sm text-red-100 mt-1">Requires Action</p>
+                    <p className="text-pink-100 font-medium text-sm">Failed</p>
+                    <p className="text-3xl font-bold mt-2 tracking-tight">{stats.failedCount || 0}</p>
+                    <p className="text-xs text-pink-100 mt-1.5 font-medium bg-white/20 inline-block px-2 py-0.5 rounded-full">Requires Action</p>
                   </div>
-                  <AlertCircle className="w-12 h-12 opacity-20" />
+                  <div className="p-3 bg-white/20 rounded-xl backdrop-blur-sm">
+                    <AlertCircle className="w-8 h-8 text-white" />
+                  </div>
                 </div>
               </Card>
             </div>
@@ -186,169 +210,112 @@ export default function AdminPaymentDashboard() {
               <option value="completed">Completed</option>
               <option value="failed">Failed</option>
             </select>
-            <button
-              onClick={() => setShowCreateModal(true)}
-              className="ml-auto px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg flex items-center gap-2 transition"
-            >
-              <Plus className="w-4 h-4" />
-              New Payment
-            </button>
+            <div className="ml-auto flex gap-2">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg flex items-center gap-2 transition h-[42px]"
+              >
+                <Plus className="w-4 h-4" />
+                New Payment
+              </button>
+            </div>
           </Card>
 
           {/* Create Modal */}
-          {showCreateModal && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 rounded-lg">
-              <Card className="bg-white dark:bg-gray-800 rounded-lg p-8 w-full max-w-2xl border border-gray-200 dark:border-gray-700">
-                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Create New Payment</h2>
-                <form onSubmit={handleCreatePayment} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Student ID</label>
-                      <input
-                        type="text"
-                        value={formData.studentId}
-                        onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Amount</label>
-                      <input
-                        type="number"
-                        value={formData.amount}
-                        onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        required
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Description</label>
-                      <input
-                        type="text"
-                        value={formData.description}
-                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Semester</label>
-                      <select
-                        value={formData.semester}
-                        onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        required
-                      >
-                        <option value="">Select semester</option>
-                        {Array.from({ length: 8 }, (_, i) => (
-                          <option key={i + 1} value={i + 1}>
-                            Semester {i + 1}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Due Date</label>
-                      <input
-                        type="date"
-                        value={formData.dueDate}
-                        onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                        required
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">Payment Method</label>
-                      <select
-                        value={formData.paymentMethod}
-                        onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
-                        className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
-                      >
-                        <option value="bank_transfer">Bank Transfer</option>
-                        <option value="cash">Cash</option>
-                        <option value="razorpay">Razorpay</option>
-                        <option value="stripe">Stripe</option>
-                      </select>
-                    </div>
-                  </div>
-                  <div className="flex gap-4 pt-4">
-                    <button
-                      type="submit"
-                      className="px-6 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition"
-                    >
-                      Create
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setShowCreateModal(false)}
-                      className="px-6 py-2 bg-gray-300 dark:bg-gray-700 text-gray-800 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-600 transition"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </Card>
-            </div>
-          )}
+          <Modal
+            isOpen={showCreateModal}
+            title="Create New Payment"
+            onClose={() => setShowCreateModal(false)}
+            showCloseButton={false}
+          >
+            <form onSubmit={handleCreatePayment} className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Student ID</label>
+                  <input
+                    type="text"
+                    value={formData.studentId}
+                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                    required
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Amount</label>
+                  <input
+                    type="number"
+                    value={formData.amount}
+                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Description</label>
+                  <input
+                    type="text"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                  />
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Semester</label>
+                  <select
+                    value={formData.semester}
+                    onChange={(e) => setFormData({ ...formData, semester: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                    required
+                  >
+                    <option value="">Select semester</option>
+                    {Array.from({ length: 8 }, (_, i) => (
+                      <option key={i + 1} value={i + 1}>
+                        Semester {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="col-span-2 md:col-span-1">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Due Date</label>
+                  <input
+                    type="date"
+                    value={formData.dueDate}
+                    onChange={(e) => setFormData({ ...formData, dueDate: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                    required
+                  />
+                </div>
+                <div className="col-span-2">
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Payment Method</label>
+                  <select
+                    value={formData.paymentMethod}
+                    onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
+                    className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-shadow"
+                  >
+                    <option value="bank_transfer">Bank Transfer</option>
+                    <option value="cash">Cash</option>
+                    <option value="razorpay">Razorpay</option>
+                    <option value="stripe">Stripe</option>
+                  </select>
+                </div>
+              </div>
+              <div className="flex gap-3 pt-4">
+                <Button type="submit" className="flex-1">
+                  Create Payment
+                </Button>
+                <Button variant="secondary" onClick={() => setShowCreateModal(false)} className="flex-1">
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          </Modal>
 
           {/* Payments Table */}
-          <Card className="rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Student</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Amount</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Semester</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Due Date</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Method</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Status</th>
-                    <th className="px-6 py-3 text-left text-sm font-semibold text-gray-900 dark:text-white">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {payments.length === 0 ? (
-                    <tr>
-                      <td colSpan="7" className="px-6 py-8 text-center text-gray-500 dark:text-gray-400">
-                        No payments found
-                      </td>
-                    </tr>
-                  ) : (
-                    payments.map((payment) => (
-                      <tr key={payment._id} className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">{payment.student?.name || 'N/A'}</td>
-                        <td className="px-6 py-4 text-sm font-semibold text-gray-900 dark:text-gray-300">{formatCurrency(payment.amount)}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">Semester {payment.semester}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300">{new Date(payment.dueDate).toLocaleDateString()}</td>
-                        <td className="px-6 py-4 text-sm text-gray-900 dark:text-gray-300 capitalize">{payment.paymentMethod}</td>
-                        <td className="px-6 py-4">
-                          <span className={`inline-block px-3 py-1 rounded-full text-sm font-semibold ${getStatusColor(payment.status)}`}>
-                            {payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 flex gap-2">
-                          <select
-                            value={payment.status}
-                            onChange={(e) => handleStatusChange(payment._id, e.target.value)}
-                            className={`px-2 py-1 rounded text-xs font-semibold ${getStatusColor(payment.status)} border-0 outline-none cursor-pointer`}
-                          >
-                            <option value="pending" className="bg-white text-gray-900">Pending</option>
-                            <option value="completed" className="bg-white text-gray-900">Completed</option>
-                            <option value="failed" className="bg-white text-gray-900">Failed</option>
-                            <option value="cancelled" className="bg-white text-gray-900">Cancelled</option>
-                          </select>
-                          <button 
-                            onClick={() => handleDelete(payment._id)}
-                            className="p-1 hover:bg-red-100 dark:hover:bg-red-900/30 rounded-lg text-red-600 dark:text-red-400 transition"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
+          <Card className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-gray-900 dark:text-white">Payment Records</h2>
             </div>
+            <Table columns={columns} data={payments} actions={actions} />
           </Card>
         </main>
       </div>

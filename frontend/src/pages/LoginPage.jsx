@@ -152,7 +152,7 @@ export default function LoginPage() {
               {/* Forgot Password */}
               <div className="text-right mt-2">
                 <Link
-                  to="#"
+                  to="/forgot-password"
                   className="text-xs text-gray-400 hover:text-blue-400 transition"
                 >
                   Forgot password?

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Bell, Send, Mail, Zap, Plus, Users } from 'lucide-react'
 import { Sidebar } from '../components/Sidebar'
-import { Navbar, Card, Alert } from '../components'
+import { Navbar, Card, Alert, Button } from '../components'
 import { notificationAPI, studentAPI } from '../services'
 
 export default function AdminNotificationPanel() {
@@ -154,13 +154,13 @@ export default function AdminNotificationPanel() {
                 </div>
 
                 <div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-                  <button
+                  <Button
                     type="submit"
-                    className="w-full sm:w-auto px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-xl flex items-center justify-center gap-2 transition-all hover:shadow-lg hover:shadow-blue-500/20 active:scale-95"
+                    className="w-full sm:w-auto flex items-center justify-center gap-2"
                   >
                     <Send className="w-5 h-5" />
                     Send Notification
-                  </button>
+                  </Button>
                 </div>
               </form>
             </Card>
