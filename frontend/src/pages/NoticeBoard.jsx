@@ -86,7 +86,7 @@ export default function NoticeBoard() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Notice Board" />
+        <Navbar title="Notices" />
 
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
@@ -94,7 +94,8 @@ export default function NoticeBoard() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Notice Board</h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{notices.length} notices posted</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Announcements, updates, and rules for residents</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">{notices.length} notices posted</p>
             </div>
             {isAdmin && (
               <Button

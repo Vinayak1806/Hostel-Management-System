@@ -136,7 +136,7 @@ export default function NotificationCenter() {
       <div className="flex">
         <Sidebar />
         <div className="flex-1 md:ml-64">
-          <Navbar title="Notifications" />
+          <Navbar title="Alerts" />
           <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-900">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
@@ -149,11 +149,19 @@ export default function NotificationCenter() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Notifications" />
+        <Navbar title="Alerts" />
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen space-y-6">
           {error && (
             <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 text-red-700 dark:text-red-400">
               {error}
+            </div>
+          )}
+
+          {/* Stats Overview */}
+          {stats && (
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Notification Center</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Monitor system updates, alerts, and message history</p>
             </div>
           )}
 

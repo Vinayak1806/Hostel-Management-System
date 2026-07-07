@@ -100,15 +100,16 @@ export default function RoomManagement() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Room Management" />
+        <Navbar title="Rooms" />
 
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Rooms</h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{rooms.length} rooms configured</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Room Inventory</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Track capacity, occupancy, and room assignments</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">{rooms.length} rooms configured</p>
             </div>
             <Button
               variant="primary"

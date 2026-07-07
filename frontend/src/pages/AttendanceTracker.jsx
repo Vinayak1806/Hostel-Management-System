@@ -130,7 +130,7 @@ export default function AttendanceTracker() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Attendance Tracker" />
+        <Navbar title="Attendance" />
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen space-y-6">
         {error && (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-700 rounded-lg p-4 text-red-700 dark:text-red-400">

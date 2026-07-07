@@ -75,7 +75,7 @@ export default function AdminNotificationPanel() {
       <div className="flex">
         <Sidebar />
         <div className="flex-1 md:ml-64">
-          <Navbar title="Admin - Notifications" />
+          <Navbar title="Admin Alerts" />
           <div className="flex items-center justify-center h-96 bg-gray-50 dark:bg-gray-900">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
           </div>
@@ -88,7 +88,7 @@ export default function AdminNotificationPanel() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Admin - Notifications" />
+        <Navbar title="Admin Alerts" />
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           
           <div className="max-w-3xl mx-auto">

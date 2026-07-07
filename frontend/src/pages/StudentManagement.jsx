@@ -93,15 +93,16 @@ export default function StudentManagement() {
     <div className="flex">
       <Sidebar />
       <div className="flex-1 md:ml-64">
-        <Navbar title="Student Management" />
+        <Navbar title="Students" />
 
         <main className="p-4 md:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
           {error && <Alert type="error" message={error} onClose={() => setError('')} />}
 
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Students</h2>
-              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">{students.length} total students registered</p>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white tracking-tight">Student Directory</h2>
+              <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Browse, search, and manage enrolled students</p>
+              <p className="text-gray-400 dark:text-gray-500 text-xs mt-1">{students.length} total students registered</p>
             </div>
             <Button
               variant="primary"

@@ -39,7 +39,7 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen bg-slate-900 font-sans text-white">
       {/* Navigation */}
-      <nav className="fixed w-full bg-slate-900/90 backdrop-blur-lg border-b border-slate-700/50 z-50">
+      <nav className="fixed w-full bg-slate-900/90 backdrop-blur-lg border-b border-slate-700/50  z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
             <img src="/logo.jpeg" alt="Hostel Hub" className="w-9 h-9 rounded-lg object-cover" />
@@ -98,7 +98,7 @@ export default function LandingPage() {
                 </button>
               </div>
 
-              <div className="mt-8 pt-6 border-t border-slate-800 flex items-center justify-center lg:justify-start gap-5">
+              <div className="mt-4 pt-4 border-t border-slate-800 flex items-center justify-center lg:justify-start gap-5">
                 <div className="flex items-center gap-1.5 text-slate-400">
                   <CheckCircle2 size={16} className="text-emerald-400" />
                   <span className="text-sm font-medium">Verified Security</span>
@@ -120,7 +120,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats - improved */}
-      <section className="py-6 lg:py-10">
+      <section className="py-4 lg:py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (

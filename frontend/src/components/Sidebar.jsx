@@ -77,7 +77,7 @@ export const Sidebar = () => {
   }, [isAdmin])
 
   const SidebarContent = () => (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full min-h-0">
       {/* Logo */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex items-center gap-3">
         <img src="/logo.jpeg" alt="Hostel Hub" className="w-10 h-10 rounded-full object-cover" />
@@ -88,7 +88,7 @@ export const Sidebar = () => {
       </div>
 
       {/* Menu Items */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 min-h-0 p-4 space-y-2 overflow-y-auto">
         {menuItems.map((item) => {
           const Icon = item.icon
           return (
@@ -116,11 +116,11 @@ export const Sidebar = () => {
         })}
       </nav>
 
-      <div className="mt-auto px-4 pb-2">
+      <div className="shrink-0 mt-4 px-4 pb-4 pt-2 border-t border-gray-200 dark:border-gray-700 space-y-2 bg-white dark:bg-gray-800">
         {/* Theme Toggle */}
         <button
           onClick={toggleTheme}
-          className="flex items-center space-x-3 w-full px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all mb-2"
+          className="flex items-center space-x-3 w-full px-4 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all"
         >
           {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
           <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
@@ -141,7 +141,7 @@ export const Sidebar = () => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden md:flex md:flex-col md:w-64 bg-white dark:bg-gray-800 shadow-md border-r border-gray-200 dark:border-gray-700 h-screen fixed left-0 top-0 z-50">
+      <aside className="hidden md:flex md:flex-col md:w-64 bg-white dark:bg-gray-800 shadow-md border-r border-gray-200 dark:border-gray-700 h-[100dvh] fixed left-0 top-0 z-50 overflow-hidden">
         <SidebarContent />
       </aside>
 
@@ -159,7 +159,7 @@ export const Sidebar = () => {
         )}
 
         <div
-          className={`fixed left-0 top-0 h-screen w-64 bg-white dark:bg-gray-800 shadow-lg z-40 transform transition-transform ${
+          className={`fixed left-0 top-0 h-[100dvh] w-64 bg-white dark:bg-gray-800 shadow-lg z-40 transform transition-transform overflow-hidden ${
             isOpen ? 'translate-x-0' : '-translate-x-full'
           }`}
         >

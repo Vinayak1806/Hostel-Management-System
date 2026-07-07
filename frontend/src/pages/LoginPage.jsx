@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { authAPI } from '../services'
 import { Input, Button, Alert } from '../components'
-import { LogIn } from 'lucide-react'
+import { LogIn, ArrowLeft } from 'lucide-react'
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ email: '', password: '' })
@@ -64,6 +64,16 @@ export default function LoginPage() {
           
           {/* Left Side */}
           <div className="bg-[#0f172a]/90 backdrop-blur-xl p-8 lg:p-10 flex flex-col justify-center">
+
+            <div className="mb-6">
+              <Link
+                to="/"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-white/10 bg-white/5 text-sm font-semibold text-gray-200 hover:bg-white/10 hover:text-white transition-all"
+              >
+                <ArrowLeft size={16} />
+                Back to Home
+              </Link>
+            </div>
             
             <div className="mb-8">
               <h1 className="text-4xl font-extrabold text-white mb-2 tracking-tight">
