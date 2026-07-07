@@ -63,7 +63,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative pt-16 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
+      <section className="relative pt-3 pb-8 lg:pt-5 lg:pb-16 overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-3xl translate-y-1/2 -translate-x-1/3" />
 
@@ -110,7 +110,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="relative h-[480px] lg:h-[680px] flex items-center justify-center">
+            <div className="relative h-[360px] lg:h-[560px] flex items-center justify-center">
               <div className="relative w-full max-w-md lg:max-w-3xl aspect-[16/10] rounded-3xl shadow-2xl shadow-black/40 overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
                 <img src="/hb.jpg" alt="Hostel building" className="absolute inset-0 w-full h-full object-cover" />
               </div>
@@ -120,7 +120,7 @@ export default function LandingPage() {
       </section>
 
       {/* Stats - improved */}
-      <section className="py-8 lg:py-12">
+      <section className="py-6 lg:py-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
@@ -209,7 +209,7 @@ export default function LandingPage() {
 
       {/* CTA */}
       <section className="py-14 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-violet-600" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black-500 to-gray-600" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.08),transparent_60%)]" />
 
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
@@ -243,7 +243,6 @@ export default function LandingPage() {
               <ul className="space-y-2 text-sm text-slate-400">
                 <li><Link to="/signup" className="hover:text-white">Apply Now</Link></li>
                 <li><Link to="/login" className="hover:text-white">Student Portal</Link></li>
-                <li><Link to="/notice-board" className="hover:text-white">Notice Board</Link></li>
                 <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
               </ul>
             </div>
