@@ -37,7 +37,7 @@ export default function LandingPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-900 font-sans text-white">
+    <main className="min-h-screen bg-slate-900 font-sans text-white">
       {/* Navigation */}
       <nav className="fixed w-full bg-slate-900/90 backdrop-blur-lg border-b border-slate-700/50 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
@@ -152,7 +152,7 @@ export default function LandingPage() {
                 <p className="text-2xl lg:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400 mb-0.5">
                   {stat.value}
                 </p>
-                <p className="text-xs font-medium text-slate-500 uppercase tracking-wider">{stat.label}</p>
+                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -220,7 +220,7 @@ export default function LandingPage() {
                       <Icon className="w-5 h-5 text-blue-400 group-hover:text-white transition-colors duration-300" />
                     </div>
                     <div>
-                      <h4 className="text-sm font-bold text-white mb-1">{item.title}</h4>
+                      <h3 className="text-sm font-bold text-white mb-1">{item.title}</h3>
                       {item.lines.map((line, i) => (
                         <p key={i} className="text-sm text-slate-400 leading-relaxed">{line}</p>
                       ))}
@@ -253,22 +253,22 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-slate-500 py-5 border-t border-slate-800">
+      <footer className="bg-slate-950 text-slate-400 py-5 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
             <div className="flex items-center gap-2">
               <img src="/logo.jpeg" alt="Hostel Hub" className="w-5 h-5 rounded object-cover opacity-70" />
               <span className="font-semibold text-slate-300">Hostel Hub</span>
             </div>
-            <div className="flex gap-5 text-slate-400">
+            <div className="flex gap-5 text-slate-300">
               <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
               <Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link>
               <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
             </div>
-            <span className="text-slate-500">&copy; {new Date().getFullYear()} Hostel Hub</span>
+            <span className="text-slate-400">&copy; {new Date().getFullYear()} Hostel Hub</span>
           </div>
         </div>
       </footer>
-    </div>
+    </main>
   )
 }

@@ -1,0 +1,12 @@
+# Hostel Hub
+
+Hostel Hub is a next-generation hostel management system designed to digitize and simplify the hostel experience for students and administrators.
+
+## Features
+- Online Fee Management
+- Maintenance Complaint Tracking
+- Smart Attendance System
+- Digital Notice Board
+
+## Contact
+Email: admissions@hostelhub.com

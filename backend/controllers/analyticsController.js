@@ -4,6 +4,7 @@ import Payment from '../models/Payment.js'
 import Complaint from '../models/Complaint.js'
 import Attendance from '../models/Attendance.js'
 import Notification from '../models/Notification.js'
+import Notice from '../models/Notice.js'
 
 export const getDashboardAnalytics = async (req, res) => {
   try {
@@ -42,19 +43,13 @@ export const getDashboardAnalytics = async (req, res) => {
     const presentCount = recentAttendance.filter(r => r.status === 'present' || r.status === 'late').length
     const attendancePercentage = recentAttendance.length > 0 ? Math.round((presentCount / recentAttendance.length) * 100) : 0
 
-    // Recent Activity - deduplicated notifications
-    const recentNotifications = await Notification.aggregate([
-      { $sort: { createdAt: -1 } },
-      {
-        $group: {
-          _id: { title: '$title', message: '$message' },
-          doc: { $first: '$$ROOT' }
-        }
-      },
-      { $replaceRoot: { newRoot: '$doc' } },
-      { $sort: { createdAt: -1 } },
-      { $limit: 5 }
-    ])
+    // Recent Activity - Broadcasts/Notices
+    const recentNotices = await Notice.find({ isActive: true }).sort({ createdAt: -1 }).limit(5)
+    const recentNotifications = recentNotices.map(notice => ({
+      title: notice.title,
+      message: notice.content,
+      createdAt: notice.createdAt
+    }))
     
     const recentPayments = await Payment.find().sort({ createdAt: -1 }).populate('student', 'name').limit(5)
 
