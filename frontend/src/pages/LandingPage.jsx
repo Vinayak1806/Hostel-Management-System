@@ -63,25 +63,26 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section className="relative pt-24 pb-12 lg:pt-32 lg:pb-16 overflow-hidden">
+      <section className="relative pt-16 pb-12 lg:pt-20 lg:pb-16 overflow-hidden">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-blue-600/10 blur-3xl -translate-y-1/2 translate-x-1/3" />
         <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-violet-600/10 blur-3xl translate-y-1/2 -translate-x-1/3" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
             <div className="text-center lg:text-left">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-500/10 text-blue-400 font-medium text-xs mb-4 border border-blue-500/20">
                 <Sparkles size={14} />
                 <span>Next-Gen Hostel Management</span>
               </div>
               <h1 className="text-4xl lg:text-[3.5rem] font-extrabold text-white tracking-tight mb-4 leading-[1.15]">
-                Your Home <br className="hidden lg:block"/>
+                Your Home <br className="hidden lg:block" />
                 Away From{' '}
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">Home.</span>
               </h1>
               <p className="text-base lg:text-lg text-slate-400 mb-6 max-w-lg mx-auto lg:mx-0 leading-relaxed">
                 Comfort, security, and a digital-first community. Manage attendance, fees, and complaints seamlessly from your dashboard.
               </p>
+
               <div className="flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
                 <button
                   onClick={() => navigate('/signup')}
@@ -109,50 +110,23 @@ export default function LandingPage() {
               </div>
             </div>
 
-            {/* Right Visual */}
-            <div className="relative h-[380px] lg:h-[440px] flex items-center justify-center">
-              <div className="relative w-full max-w-xs aspect-[4/5] bg-gradient-to-br from-blue-600 to-violet-600 rounded-3xl shadow-2xl shadow-blue-600/20 overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
-                <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&q=80')] mix-blend-overlay opacity-40 bg-cover bg-center" />
-
-                <div className="absolute -left-4 top-8 bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-700 animate-float">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 bg-blue-500/20 rounded-full flex items-center justify-center">
-                      <Wifi size={16} className="text-blue-400" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-white text-xs">1 Gbps</p>
-                      <p className="text-[10px] text-slate-400">Free WiFi</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="absolute -right-4 bottom-16 bg-slate-800 p-3 rounded-xl shadow-lg border border-slate-700 animate-float animation-delay-2000">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-9 h-9 bg-emerald-500/20 rounded-full flex items-center justify-center">
-                      <Shield size={16} className="text-emerald-400" />
-                    </div>
-                    <div>
-                      <p className="font-bold text-white text-xs">24/7</p>
-                      <p className="text-[10px] text-slate-400">Security</p>
-                    </div>
-                  </div>
-                </div>
+            <div className="relative h-[480px] lg:h-[680px] flex items-center justify-center">
+              <div className="relative w-full max-w-md lg:max-w-3xl aspect-[16/10] rounded-3xl shadow-2xl shadow-black/40 overflow-hidden transform lg:rotate-2 hover:rotate-0 transition-transform duration-500">
+                <img src="/hb.jpg" alt="Hostel building" className="absolute inset-0 w-full h-full object-cover" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats */}
-      <section className="py-6 bg-slate-800/50 border-y border-slate-700/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-slate-700/50">
+      {/* Stats - improved */}
+      <section className="py-8 lg:py-12">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {stats.map((stat, idx) => (
-              <div key={idx} className="text-center py-3 px-4">
-                <p className="text-2xl lg:text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400 mb-0.5">
-                  {stat.value}
-                </p>
-                <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{stat.label}</p>
+              <div key={idx} className="bg-slate-800/50 border border-slate-700/40 rounded-xl p-6 flex flex-col items-center text-center shadow-sm">
+                <p className="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-violet-400">{stat.value}</p>
+                <p className="mt-2 text-xs md:text-sm text-slate-400 uppercase tracking-wider">{stat.label}</p>
               </div>
             ))}
           </div>
@@ -253,20 +227,48 @@ export default function LandingPage() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-slate-400 py-5 border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-3 text-sm">
-            <div className="flex items-center gap-2">
-              <img src="/logo.jpeg" alt="Hostel Hub" className="w-5 h-5 rounded object-cover opacity-70" />
-              <span className="font-semibold text-slate-300">Hostel Hub</span>
+      <footer className="bg-slate-950 text-slate-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+            <div className="space-y-3">
+              <div className="flex items-center gap-3">
+                <img src="/logo.jpeg" alt="Hostel Hub" className="w-10 h-10 rounded-lg object-cover" />
+                <span className="text-lg font-semibold">Hostel Hub</span>
+              </div>
+              <p className="text-sm text-slate-400">Comfort, security, and a digital-first community. Manage attendance, fees, and complaints seamlessly.</p>
             </div>
-            <div className="flex gap-5 text-slate-300">
-              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link to="/terms-of-service" className="hover:text-white transition-colors">Terms</Link>
-              <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+
+            <div>
+              <h4 className="font-semibold mb-3">Product</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><Link to="/signup" className="hover:text-white">Apply Now</Link></li>
+                <li><Link to="/login" className="hover:text-white">Student Portal</Link></li>
+                <li><Link to="/notice-board" className="hover:text-white">Notice Board</Link></li>
+                <li><Link to="/contact" className="hover:text-white">Contact</Link></li>
+              </ul>
             </div>
-            <span className="text-slate-400">&copy; {new Date().getFullYear()} Hostel Hub</span>
+
+            <div>
+              <h4 className="font-semibold mb-3">Company</h4>
+              <ul className="space-y-2 text-sm text-slate-400">
+                <li><Link to="/about" className="hover:text-white">About Us</Link></li>
+                <li><Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
+                <li><Link to="/terms-of-service" className="hover:text-white">Terms of Service</Link></li>
+                <li><Link to="/careers" className="hover:text-white">Careers</Link></li>
+              </ul>
+            </div>
+
+            <div>
+              <h4 className="font-semibold mb-3">Contact & Newsletter</h4>
+              <p className="text-sm text-slate-400 mb-3">admissions@hostelhub.com<br/>+91 98765 43210</p>
+              <form className="flex gap-2" onSubmit={(e) => e.preventDefault()}>
+                <input aria-label="Email" type="email" placeholder="Your email" className="min-w-0 flex-1 bg-slate-900/40 border border-slate-800 rounded-md px-3 py-2 text-sm text-white placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600" />
+                <button className="bg-blue-600 hover:bg-blue-500 text-white px-3 py-2 rounded-md text-sm">Subscribe</button>
+              </form>
+            </div>
           </div>
+
+         
         </div>
       </footer>
     </main>

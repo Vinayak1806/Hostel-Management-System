@@ -10,6 +10,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import TermsOfService from './pages/TermsOfService'
 import ContactUs from './pages/ContactUs'
+import About from './pages/About'
 import ProfilePage from './pages/ProfilePage'
 import AdminDashboard from './pages/AdminDashboard'
 import StudentDashboard from './pages/StudentDashboard'
@@ -68,6 +69,7 @@ function AppRoutes() {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/contact" element={<ContactUs />} />
+        <Route path="/about" element={<About />} />
 
         {/* Admin Routes */}
         <Route

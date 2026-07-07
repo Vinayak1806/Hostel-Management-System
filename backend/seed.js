@@ -32,14 +32,14 @@ const seedDatabase = async () => {
 
     // Create admin user
     const admin = await User.create({
-      name: 'Vinayak Jadhav',
+      name: 'Vinayak Pawate',
       email: 'admin@hostelhub.com',
       phone: '9823456780',
       password: 'admin123',
       role: 'admin',
       createdAt: mayDate
     })
-    console.log('✓ Created Admin: Vinayak Jadhav')
+    console.log('✓ Created Admin: Vinayak Pawate')
 
     // Create 15 student users with realistic Indian (Maharashtra) data
     const studentsData = [
