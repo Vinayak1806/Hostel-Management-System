@@ -12,6 +12,12 @@ export const handleChatMessage = async (req, res) => {
     const userId = req.user.id
     const userRole = req.user.role
 
+    if (!genAI) {
+      return res.status(503).json({
+        message: 'Chatbot is not configured on the server. Please set GEMINI_API_KEY in the backend environment.'
+      })
+    }
+
     if (!message) {
       return res.status(400).json({ message: 'Message is required' })
     }

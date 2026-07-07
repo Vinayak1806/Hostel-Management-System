@@ -1,10 +1,13 @@
+import 'dotenv/config'
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
-if (!process.env.GEMINI_API_KEY) {
+const geminiApiKey = process.env.GEMINI_API_KEY?.trim()
+
+if (!geminiApiKey) {
   console.warn('GEMINI_API_KEY is not defined in environment variables. Chatbot will not work.')
 }
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || 'dummy_key')
-const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' })
+const genAI = geminiApiKey ? new GoogleGenerativeAI(geminiApiKey) : null
+const model = genAI ? genAI.getGenerativeModel({ model: 'gemini-2.5-flash' }) : null
 
-export { genAI, model }
+export { genAI, model, geminiApiKey }
