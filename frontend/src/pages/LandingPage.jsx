@@ -253,7 +253,6 @@ export default function LandingPage() {
                 <li><Link to="/about" className="hover:text-white">About Us</Link></li>
                 <li><Link to="/privacy-policy" className="hover:text-white">Privacy Policy</Link></li>
                 <li><Link to="/terms-of-service" className="hover:text-white">Terms of Service</Link></li>
-                <li><Link to="/careers" className="hover:text-white">Careers</Link></li>
               </ul>
             </div>
 
